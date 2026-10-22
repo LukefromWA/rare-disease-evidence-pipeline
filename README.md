@@ -55,3 +55,17 @@ Not a clinically validated diagnostic or treatment-selection system.
 ## License
 
 Not yet selected. Third-party materials retain their own licenses.
+
+## AI assistance
+
+Perplexity (Pro tier) was used primarily for documentation, debugging and
+code/workflow integration. The participant confirms that relevant privacy
+and data-usage settings preventing private data from being used for model
+training were enabled from the beginning and checked throughout the project.
+Equivalent training-use restrictions were enabled from the outset on other
+AI accounts used for the project.
+
+See [AI assistance disclosure](docs/AI_ASSISTANCE.md). Provider/product/tier
+details for any additional contributing service belong in the final methods
+record. This statement does not assert zero retention.
+

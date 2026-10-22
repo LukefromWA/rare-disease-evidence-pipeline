@@ -2,3 +2,8 @@
 /*
 !/.gitignore
 !/README.md
+
+# Reviewed AI-assistance documentation.
+!/docs/
+/docs/*
+!/docs/AI_ASSISTANCE.md
