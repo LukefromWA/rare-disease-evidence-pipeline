@@ -70,7 +70,7 @@ Compare the case's observed phenotype terms with gene-associated term sets using
 
 ```math
 IC(t)=-\log\frac{n_t}{N},\qquad
-s_{\mathrm{Lin}}(a,b)=\frac{2IC(\operatorname{MICA}(a,b))}{IC(a)+IC(b)}.
+s_{\mathrm{Lin}}(a,b)=\frac{2IC(\mathrm{MICA}(a,b))}{IC(a)+IC(b)}.
 ```
 
 Here, n_t counts annotated entities associated with a term or its descendants in the declared universe. MICA is the most informative common ancestor. Edge cases such as a zero denominator need an explicit implementation convention.
@@ -78,7 +78,7 @@ Here, n_t counts annotated entities associated with a term or its descendants in
 Aggregate term similarities with symmetric best-match average:
 
 ```math
-\operatorname{BMA}(P,G)=\frac12\left[
+\mathrm{BMA}(P,G)=\frac12\left[
 \frac1{|P|}\sum_{a\in P}\max_{b\in G}s(a,b)
 +\frac1{|G|}\sum_{b\in G}\max_{a\in P}s(a,b)
 \right].
@@ -139,8 +139,8 @@ The meaning of L_i must be stated: a transformed evidence score is not automatic
 The dependence analysis examines whether phenotype and network evidence overlap. A rank-based Gaussian transform on paired available observations gives:
 
 ```math
-z_i=\Phi^{-1}\left(\frac{\operatorname{rank}(s_i)}{n+1}\right),
-\qquad \widehat\rho=\operatorname{cor}(z^{(H)},z^{(N)}).
+z_i=\Phi^{-1}\left(\frac{\mathrm{rank}(s_i)}{n+1}\right),
+\qquad \widehat\rho=\mathrm{cor}(z^{(H)},z^{(N)}).
 ```
 
 Declare tie handling and the complete-case sample size. A modest correlation does not prove independence or validate a chosen copula.
@@ -161,7 +161,7 @@ With prior Beta(a_0,b_0) and informative counts:
 
 ```math
 f_i\mid\mathrm{counts}\sim
-\operatorname{Beta}(a_0+AD_{\mathrm{alt},i},b_0+AD_{\mathrm{ref},i}).
+\mathrm{Beta}(a_0+AD_{\mathrm{alt},i},b_0+AD_{\mathrm{ref},i}).
 ```
 
 Report credible intervals and read-level/QC qualifications. A beta-binomial versus fixed heterozygous-binomial comparison is a model comparison, not proof of mosaicism. A low fraction alone does not identify its biological cause.
@@ -178,7 +178,7 @@ A11 keeps sensitivity results separate from the original evidence scores. Pertur
 
 ```math
 \widehat\pi_i^{(m)}=\frac1B\sum_{b=1}^{B}
-\mathbf 1\{\operatorname{rank}_b(i)\le m\}.
+\mathbf 1\{\mathrm{rank}_b(i)\le m\}.
 ```
 
 For two top-m sets with overlap r from n candidates, the Kuncheva index is:
@@ -273,7 +273,7 @@ The raw correlation parameter is `rho_raw`. Correlation and copula utility are g
 ```math
 z_{\beta,gk}\sim\mathcal N(0,1),\quad
 \beta_k\sim\mathcal N(0,s_{\beta,k}^2),\quad
-\tau_{\beta,k}\sim\operatorname{HalfNormal}(s_{\tau\beta,k}).
+\tau_{\beta,k}\sim\mathrm{HalfNormal}(s_{\tau\beta,k}).
 ```
 
 The grouping factor must be declared in the run metadata. M3a adds no copula contribution. For the unseen-group slot `G + 1`, generated quantities sample a population-derived coefficient vector; rows assigned to that slot share it within a posterior draw.
@@ -299,8 +299,8 @@ z_{\rho,g},z_{\gamma,g}\overset{\mathrm{ind}}\sim\mathcal N(0,1),\quad
 \gamma\sim\mathcal N(0,s_\gamma^2),
 ```
 ```math
-\tau_\rho\sim\operatorname{HalfNormal}(s_{\tau\rho}),\qquad
-\tau_\gamma\sim\operatorname{HalfNormal}(s_{\tau\gamma}).
+\tau_\rho\sim\mathrm{HalfNormal}(s_{\tau\rho}),\qquad
+\tau_\gamma\sim\mathrm{HalfNormal}(s_{\tau\gamma}).
 ```
 
 Here, `mu_rho_raw` is the unconstrained location before the tanh transform; gamma and tau_gamma correspond to `beta_cop` and `tau_cop`. The Stan definitions supply the prior scales as data and include the half-Normal normalization constants. New-group coefficients, correlation and utility are sampled from the fitted populations rather than silently assigned to an existing group.
@@ -405,7 +405,7 @@ Perturb declared scenario and evidence-family weights, recompute scores, and ran
 
 ```math
 \widehat\pi_d^{(k)}=\frac1B\sum_{b=1}^{B}
-\mathbf1\{\operatorname{rank}_b(d)\le k\}.
+\mathbf1\{\mathrm{rank}_b(d)\le k\}.
 ```
 
 Report rank ranges, coverage, gating status and assumptions that drive the ranking. These frequencies measure stability under the chosen scenarios; they are not probabilities of benefit. Final outputs remain research hypotheses, not treatment recommendations.
