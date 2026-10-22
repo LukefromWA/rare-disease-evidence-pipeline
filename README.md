@@ -449,9 +449,8 @@ The repository license file is pending consolidation. Participant-submission lic
 
 ## AI assistance
 
-I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training, and checked those settings throughout the project. I enabled equivalent training-use restrictions from the outset on my other AI accounts.
+I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training, and checked those settings throughout the project. 
 
-This records the settings I verified; it does not assert zero retention or establish that every product/tier meets the organizer's data-processing requirements. Additional contributing providers, products, tiers and applicable data-handling terms belong in the final methods record.
 
 See the [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
