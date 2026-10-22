@@ -1,3 +1,5 @@
-# Import status
+# External-training import status
 
-Stan sources and diagnostic figure candidates only. Full training/scoring reproduction and publication review remain pending. Existing source/model workspaces are unchanged. No raw model artifacts are included. No Git staging, commit or push is performed by the importer.
+I have imported four Stan model definitions, retained-parameter diagnostic records, gt PNG diagnostic tables and nested model/fold documentation. I link individual scientific plots rather than the earlier review-layout panels.
+
+I have not yet completed the runnable training/scoring source import. Raw chains, RDS bundles and private predictions are not included.

@@ -1,56 +1,33 @@
-# External training — retained Bayesian models
+# External training — Bayesian model comparison
 
-I use this branch to document the external-model part of my rare-disease evidence pipeline. I trained four Stan specifications and retained three CV fold artifacts per specification. The downstream frozen predictor uses an equal-weight mixture of the three M3b fold components.
+I trained four Stan specifications using an external public cohort and retained three cross-validation fits per specification. I use the three retained M3b components as an equal-weight frozen predictor for downstream inference.
 
-## Current import
+## Retained-model diagnostics
 
-Four Stan model definitions, checked diagnostic figure candidates, numeric diagnostic records and model pages are included. Training/scoring entrypoints and their full shared-library dependencies will be imported and tested separately. This is not yet a runnable end-to-end checkout.
+![Retained model diagnostic table](figures/all_models_diagnostics.png)
 
-## M2a
+I recomputed parameter diagnostics from the retained draws using their stored chain metadata. All twelve model-fold parameter checks passed the declared thresholds. I report the nonzero divergence counts separately, and treedepth remains unverified.
 
-[Model documentation and all three folds](models/m2a/README.md)
+## Model documentation
 
-![M2a overview](models/m2a/figures/m2a_overview_panel.png)
+| Model | Fold diagnostics and plots | Analysis role |
+|---|---|---|
+| M2a | [Model README](models/m2a/README.md) | Alternative fitted specification |
+| M2b | [Model README](models/m2b/README.md) | Alternative fitted specification |
+| M3a | [Model README](models/m3a/README.md) | Alternative fitted specification |
+| M3b | [Model README](models/m3b/README.md) | Frozen downstream specification |
 
-## M2b
+## Reading the diagnostics
 
-[Model documentation and all three folds](models/m2b/README.md)
+I use R-hat and effective sample size to assess retained parameter draws. I do not treat these checks as predictive-performance comparisons. The divergence percentages use recorded counts divided by retained draws; the same-attempt and unthinned post-warmup assumptions must hold before calling them verified transition rates.
 
-![M2b overview](models/m2b/figures/m2b_overview_panel.png)
+## Evaluation and frozen inference
 
-## M3a
+I distinguish OOF evaluation from new-case scoring. An OOF case is evaluated with the component that excluded it from training. My frozen M3b predictor combines three components for new cases; it is not the identical OOF predictor or one full-data posterior. Each component has four chains.
 
-[Model documentation and all three folds](models/m3a/README.md)
+## Reproduction status
 
-![M3a overview](models/m3a/figures/m3a_overview_panel.png)
-
-## M3b
-
-[Model documentation and all three folds](models/m3b/README.md)
-
-![M3b overview](models/m3b/figures/m3b_overview_panel.png)
-
-## Interpretation
-
-All twelve recorded parameter gates passed the declared thresholds.
-
-Parameter diagnostics are not predictive validation. Recorded divergences remain qualified, treedepth is unverified, and conflicting historical summaries are preserved separately.
-
-Count / draws means recorded divergences divided by retained parameter draws. A verified post-warmup transition rate requires the same retained attempt and unthinned draws.
-
-## OOF evaluation versus new-case inference
-
-An OOF prediction uses the component that excluded the evaluated case from training. The frozen three-component mixture is a distinct predictor for new cases, not the identical OOF predictor or one full-data posterior. Folds are not chains.
-
-## Remaining work
-
-- Import the actual B-stage entrypoints, frozen-CV adapter and complete dependency closure.
-- Add tested training, OOF evaluation and frozen-inference instructions.
-- Add verified webshot PNG tables; the selector-warning screenshot is not assumed valid.
-- Resolve the recorded Tier A release gaps in a separate candidate change.
-- Review source, figure labels, data terms and event publication requirements before public release.
-
-Raw chains, RDS bundles, private predictions, private configuration, datasets and original logs are not included. Public training-data origin does not automatically establish redistribution permission.
+I have included model definitions, diagnostic records and individual fold plots. I am still integrating and verifying the training/scoring entrypoints and their shared dependencies, so this checkout is not yet a complete end-to-end runner. I keep raw training objects and private-case predictions out of this source-and-documentation import.
 
 ## AI assistance
 
@@ -59,4 +36,3 @@ I used Perplexity Pro primarily for documentation, debugging and code/workflow i
 I will identify any additional contributing providers, products and tiers in my final methods record. This describes the settings I verified; I am not claiming zero retention.
 
 See my [AI assistance disclosure](docs/AI_ASSISTANCE.md).
-

@@ -1,23 +1,19 @@
 # M3b — CV fold 1
 
-I report this retained fold without refitting.
+I show the retained parameter draws below without refitting.
 
 [Back to the model README](../../README.md)
 
-## Combined diagnostic panel
-
-![M3b fold 1 — combined diagnostic panel](../../figures/m3b_fold01_panel.png)
-
 ## Trace plots
 
-![M3b fold 1 — trace plots](../../figures/m3b_fold01_trace.png)
+![M3b fold 1 trace](../../figures/m3b_fold01_trace.png)
 
 ## Rank overlays
 
-![M3b fold 1 — rank overlays](../../figures/m3b_fold01_rank.png)
+![M3b fold 1 rank](../../figures/m3b_fold01_rank.png)
 
 ## Parameter intervals
 
-![M3b fold 1 — parameter intervals](../../figures/m3b_fold01_intervals.png)
+![M3b fold 1 intervals](../../figures/m3b_fold01_intervals.png)
 
-I keep parameter diagnostics separate from predictive validation. I retain the recorded divergence qualifications and unverified treedepth status. The three CV folds are separate fits, not chains.
+I interpret the plots alongside the model diagnostic table. Parameter intervals are not clinical treatment-effect estimates; the recorded divergence and treedepth qualifications still apply.

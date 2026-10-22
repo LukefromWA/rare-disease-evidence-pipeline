@@ -156,3 +156,12 @@
 !/models/m3b/folds/fold01/README.md
 !/models/m3b/folds/fold02/README.md
 !/models/m3b/folds/fold03/README.md
+
+# Embedded gt diagnostic PNG tables.
+!/figures/
+/figures/*
+!/figures/all_models_diagnostics.png
+!/models/m2a/figures/m2a_diagnostics.png
+!/models/m2b/figures/m2b_diagnostics.png
+!/models/m3a/figures/m3a_diagnostics.png
+!/models/m3b/figures/m3b_diagnostics.png

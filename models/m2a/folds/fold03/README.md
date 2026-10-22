@@ -1,23 +1,19 @@
 # M2a — CV fold 3
 
-I report this retained fold without refitting.
+I show the retained parameter draws below without refitting.
 
 [Back to the model README](../../README.md)
 
-## Combined diagnostic panel
-
-![M2a fold 3 — combined diagnostic panel](../../figures/m2a_fold03_panel.png)
-
 ## Trace plots
 
-![M2a fold 3 — trace plots](../../figures/m2a_fold03_trace.png)
+![M2a fold 3 trace](../../figures/m2a_fold03_trace.png)
 
 ## Rank overlays
 
-![M2a fold 3 — rank overlays](../../figures/m2a_fold03_rank.png)
+![M2a fold 3 rank](../../figures/m2a_fold03_rank.png)
 
 ## Parameter intervals
 
-![M2a fold 3 — parameter intervals](../../figures/m2a_fold03_intervals.png)
+![M2a fold 3 intervals](../../figures/m2a_fold03_intervals.png)
 
-I keep parameter diagnostics separate from predictive validation. I retain the recorded divergence qualifications and unverified treedepth status. The three CV folds are separate fits, not chains.
+I interpret the plots alongside the model diagnostic table. Parameter intervals are not clinical treatment-effect estimates; the recorded divergence and treedepth qualifications still apply.
