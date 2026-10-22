@@ -1,0 +1,4 @@
+# Deny by default; approve new repository content explicitly.
+/*
+!/.gitignore
+!/README.md
