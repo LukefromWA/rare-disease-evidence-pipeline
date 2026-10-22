@@ -23,3 +23,33 @@ I fitted this alternative specification; I did not package it as the M3b deploym
 ## Reproduction status
 
 I have included the Stan definition and diagnostic outputs. I am still integrating the tested training/scoring entrypoints and their shared dependencies into this checkout.
+
+<!-- BEGIN MODEL_ARCHITECTURE -->
+## Model structure
+
+![M2A model architecture](figures/architecture.svg)
+
+### Global coefficients
+
+The model uses one coefficient vector across groups. It does not add a copula contribution to the candidate score.
+
+\[
+\eta_i = x_i^{\mathsf T}\beta.
+\]
+
+Here, `X` is the prepared feature matrix. For the copula specifications, the HPO/network pseudo-observations are separate inputs, and `m_i` is the availability mask. Feature meanings and column order come from the matching preprocessing record, not the Stan filename.
+
+### Likelihood and prediction
+
+Training uses a categorical-logit likelihood over the candidate set within each case, with `y_pos` identifying the single labeled candidate. Generated quantities apply a within-case softmax to new candidate scores and return `p_new`. These probabilities are conditional on the supplied candidate set, not clinical pathogenicity probabilities.
+
+### Parameters and priors
+
+`beta`: global feature coefficients with zero-centered Normal priors. Prior scales are supplied as data.
+
+[Read the executable Stan definition](../../workflow/stan/m2a.stan).
+
+### Retained-fit downloads
+
+[Open the retained-fold release](https://github.com/LukefromWA/rare-disease-evidence-pipeline/releases/tag/retained-folds-v1). Individual artifact links and fingerprints appear on the fold pages.
+<!-- END MODEL_ARCHITECTURE -->

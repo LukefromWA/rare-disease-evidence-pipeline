@@ -9,9 +9,14 @@
       "bytes": 5121
     },
     {
+      "path": "README.md",
+      "sha256": "98f889e3be0b147b3d443be0fbdf77e76ccde645520688c4b4132b28e0330db0",
+      "bytes": 5155
+    },
+    {
       "path": "docs/AI_ASSISTANCE.md",
-      "sha256": "eba77dc7e45e75ab68f829d9b33e8e14bd09d35240b41519462a62f847eddcf2",
-      "bytes": 1308
+      "sha256": "ea36b06bf8e8ba114fa0fdc405fb8497ddc5767abfa84fe3585cf128e2407d49",
+      "bytes": 780
     },
     {
       "path": "docs/diagnostics/all_parameter_diagnostics.csv",
@@ -24,14 +29,74 @@
       "bytes": 1914
     },
     {
-      "path": "docs/IMPORT_STATUS.md",
-      "sha256": "7c821c41ebb9dd10aa5ed321adae0343daf25636a9322a2709bd57fa832d66db",
-      "bytes": 399
+      "path": "docs/figures/architecture.png",
+      "sha256": "ad14d2b6388a4534ca455bbb29f300824df71bbb74a18b0fa3642c3d6ba4fabc",
+      "bytes": 129238
+    },
+    {
+      "path": "docs/figures/architecture.svg",
+      "sha256": "ef56f41c4f572e0f3803379b66da1e30e9effa289e6f922b6811fcbb623c579e",
+      "bytes": 15142
+    },
+    {
+      "path": "docs/retained-artifacts.md",
+      "sha256": "4e4f314531768769f10d065ca15a11f06dbd2e869397da6ba683cd2a8af67260",
+      "bytes": 1018
+    },
+    {
+      "path": "docs/retained-fold-assets.csv",
+      "sha256": "5c7cc93c149319505e687a01108971e1240c6ac8afe897a4c82f455099b53d62",
+      "bytes": 1104
+    },
+    {
+      "path": "environment/R-installed-packages.csv",
+      "sha256": "825af32617eb9aa3e4061aa81c0977e428605b41af5c19fd7374d6225e9e9808",
+      "bytes": 17217
+    },
+    {
+      "path": "environment/README.md",
+      "sha256": "5e6fc0962059385b108050c04a737c12743b17490e88175dc36bd12afec33d1b",
+      "bytes": 762
+    },
+    {
+      "path": "environment/diagram-requirements.txt",
+      "sha256": "38f07e1b3e30df0c0a86df315115e30896fb4fad9700a40257b8c4f38fcea87a",
+      "bytes": 256
+    },
+    {
+      "path": "environment/graphviz-version.txt",
+      "sha256": "cdaf5667c6d21a76a8c632b1321964f1faabc6987b38806db929c73904dfdb12",
+      "bytes": 34
+    },
+    {
+      "path": "environment/python-version.txt",
+      "sha256": "f615dc9512de8b165e2b595e5cdc608a3ba7927ae92f959c5b42ec3d58e2ffa8",
+      "bytes": 14
     },
     {
       "path": "figures/all_models_diagnostics.png",
       "sha256": "ac2f552832e282e1b61ff2adb0eb0324415f4621deb559e30a21b4850a0bd0c0",
       "bytes": 254429
+    },
+    {
+      "path": "models/README.md",
+      "sha256": "622436dba7a09b2f9ec767127d27ad386703ec62f9b306b7c44b856fc15cca4c",
+      "bytes": 788
+    },
+    {
+      "path": "models/m2a/README.md",
+      "sha256": "2b6c2173fca51e7d49bebda2cc3d2fc503398d9cccc2c727a2ff3961be4a36b1",
+      "bytes": 2435
+    },
+    {
+      "path": "models/m2a/figures/architecture.png",
+      "sha256": "f07f2d85652e9aea8c9b90318429f23188a3184bcd9ade662a9afb11798d7220",
+      "bytes": 38659
+    },
+    {
+      "path": "models/m2a/figures/architecture.svg",
+      "sha256": "c39740ee2cfa5e41bd1e36637b9188f1cc447476afa5633c94a51832e9add322",
+      "bytes": 6024
     },
     {
       "path": "models/m2a/figures/m2a_diagnostics.png",
@@ -115,23 +180,33 @@
     },
     {
       "path": "models/m2a/folds/fold01/README.md",
-      "sha256": "cc9665251528750beb8c108677dcc6733cf16a158440fb0d97ad8954b7b1590d",
-      "bytes": 554
+      "sha256": "638239dc17a79528921b73c7e3a7e464ad7f41c9d9aac593b56b36d11ce7cb35",
+      "bytes": 1285
     },
     {
       "path": "models/m2a/folds/fold02/README.md",
-      "sha256": "2bb0a0e0789552f44aca63002d79746787353fd03140eb4b1cc53aa67f3227fb",
-      "bytes": 554
+      "sha256": "2625a121ad901b5d067514f38d6c3219f74f0c222ac45647de4e5ac930808445",
+      "bytes": 1285
     },
     {
       "path": "models/m2a/folds/fold03/README.md",
-      "sha256": "187553584e6ad87f79b186cb4c1ac76e52f1584c85e0be73e7d794a592c18127",
-      "bytes": 554
+      "sha256": "8e56ca8edeebe6419e97ebf156a556d58b84d8221d24bcc8ce16afddc23605df",
+      "bytes": 1285
     },
     {
-      "path": "models/m2a/README.md",
-      "sha256": "476092b85f76b631cd121a198a56356727ad5bf982afe5e4bce430bad2a6c8e9",
-      "bytes": 1045
+      "path": "models/m2b/README.md",
+      "sha256": "341da77d9722b1034f4a3f75d82f9004f54806694916c8fc63f7e4fcb61c450d",
+      "bytes": 2575
+    },
+    {
+      "path": "models/m2b/figures/architecture.png",
+      "sha256": "34e6406b6038e0bcb3e2a14811f9d7b29dd94b5d6de85a0130bb4f06f9172472",
+      "bytes": 67982
+    },
+    {
+      "path": "models/m2b/figures/architecture.svg",
+      "sha256": "ddeaa392f7a4d4f36638f86c33183c381f2530109190cac75801d59a27765deb",
+      "bytes": 10617
     },
     {
       "path": "models/m2b/figures/m2b_diagnostics.png",
@@ -215,23 +290,33 @@
     },
     {
       "path": "models/m2b/folds/fold01/README.md",
-      "sha256": "a4e2934c17b830a3693f3202c594e6f68b8a398ea6bc472520e893f6e6816ee4",
-      "bytes": 554
+      "sha256": "f0ac349c12fe14e7d1a9b6bdb03fe3e1383b4fefa56c785b4dfe076ead1278d0",
+      "bytes": 1285
     },
     {
       "path": "models/m2b/folds/fold02/README.md",
-      "sha256": "19478c02418b110bcbadb7c4b29ae3d4259c942744b1204a7ffed9fae078c32c",
-      "bytes": 554
+      "sha256": "00793f801e7a827addfc7dbaffd72546ca1daa26987eedc2f0ed5f9e1505029c",
+      "bytes": 1285
     },
     {
       "path": "models/m2b/folds/fold03/README.md",
-      "sha256": "a7561171565240b47bea8cbaee22da5189aa2bcb3ca94b106b856662c538ed65",
-      "bytes": 554
+      "sha256": "57c8c21901eb0ff7e00442ceb6370b5abeccec825e63f7a580427336e5e10449",
+      "bytes": 1285
     },
     {
-      "path": "models/m2b/README.md",
-      "sha256": "03f2450829d18b679ff45ed42301fd738df4930187ed7d67daf294717a767638",
-      "bytes": 1045
+      "path": "models/m3a/README.md",
+      "sha256": "1ec277ba9a177e1df08a57efa801954d31e7d057ba6e2923bdcbab9779997e40",
+      "bytes": 2792
+    },
+    {
+      "path": "models/m3a/figures/architecture.png",
+      "sha256": "a0a28e3e523d927874970834ad6ebbc7f27e378e59bc11d2a81d639ef5451786",
+      "bytes": 47645
+    },
+    {
+      "path": "models/m3a/figures/architecture.svg",
+      "sha256": "322e4ed460cb50188a6f3bbef621f5d26f435e542d0bf007476dd884d9868aed",
+      "bytes": 7126
     },
     {
       "path": "models/m3a/figures/m3a_diagnostics.png",
@@ -315,23 +400,33 @@
     },
     {
       "path": "models/m3a/folds/fold01/README.md",
-      "sha256": "cc2c60d0a375f9ca8a0c9f016c61e041602bb54704589540f6487fdfd130e601",
-      "bytes": 554
+      "sha256": "04e58c21f77a10be045144824bd0df9e8f6dd200db96e6dc8fbcbea042a8536b",
+      "bytes": 1285
     },
     {
       "path": "models/m3a/folds/fold02/README.md",
-      "sha256": "92418b6b2c27744d17c800ae692949d6a4c9c84416929a00c34f11486c8af1a2",
-      "bytes": 554
+      "sha256": "ff82cbd808b735352cbb42c484fab5a1f75e8394c4e3631587ec02b289f4e8ec",
+      "bytes": 1285
     },
     {
       "path": "models/m3a/folds/fold03/README.md",
-      "sha256": "3eba28021be6caaec83adf47d21659c38f7c09305ceb7b87fdd0c9c3000ffa2d",
-      "bytes": 554
+      "sha256": "4d5b2b433c5a6da024f763012baa577caa44384b413759158715d262fcbd29e9",
+      "bytes": 1285
     },
     {
-      "path": "models/m3a/README.md",
-      "sha256": "eec27ac3590dcf02afaebfd246e1c55498611fa8522742ea11497cb1df0e438c",
-      "bytes": 1045
+      "path": "models/m3b/README.md",
+      "sha256": "e0afff1a042e7c90c2c7272dad23118ee3a59f09a3d2a9c080784d1304936299",
+      "bytes": 3136
+    },
+    {
+      "path": "models/m3b/figures/architecture.png",
+      "sha256": "bb204990c40186e145da1f88ff5d5573c68adaed6a695df034dfefd5b91f126d",
+      "bytes": 80375
+    },
+    {
+      "path": "models/m3b/figures/architecture.svg",
+      "sha256": "64a33b815a5c990a9eb01539b67e52d5b913461a3b05aba994309f6ab4a3c027",
+      "bytes": 11756
     },
     {
       "path": "models/m3b/figures/m3b_diagnostics.png",
@@ -415,28 +510,33 @@
     },
     {
       "path": "models/m3b/folds/fold01/README.md",
-      "sha256": "fd5e4aade43e94f8711815443bdac1601ee1fa753c5c48747167cb6245ad0261",
-      "bytes": 554
+      "sha256": "06323c57223c1a1df4fd823196a6e9c5f0a3169aa9edd02a5eec112f6edd44ed",
+      "bytes": 1285
     },
     {
       "path": "models/m3b/folds/fold02/README.md",
-      "sha256": "f178d82c3fdd5a6aa567094e85f908480a1b4c5c1af62dfba4a0ca6565632fa5",
-      "bytes": 554
+      "sha256": "1249586b0c908dd7904307d3af5afa129da639ceb9cfd68d259de077f845dc05",
+      "bytes": 1285
     },
     {
       "path": "models/m3b/folds/fold03/README.md",
-      "sha256": "b93421ee2ae92e915bacdf4bf481fb08624704667dd2101c711567a674c1e2cf",
-      "bytes": 554
+      "sha256": "e8252efa644f75ec16e4087c03890c0aa14cfcf83bfa69fbaafafa20648d1785",
+      "bytes": 1285
     },
     {
-      "path": "models/m3b/README.md",
-      "sha256": "93868d62c9e166283e4dab10bb5967e1a384973fd5e37fbbba4b7a3a9ac5d680",
-      "bytes": 1039
+      "path": "tools/render_architecture.py",
+      "sha256": "ef294c5d996e68af15d46f8a8cd66699e53ca5db563c8d4eeb3bdf5e8211c569",
+      "bytes": 3801
     },
     {
-      "path": "README.md",
-      "sha256": "cc728925f11bce53fcc73e9928f97cd26d26717c1d25c14e651c46d1e1d289b1",
-      "bytes": 2731
+      "path": "tools/render_model_architectures.py",
+      "sha256": "0294d6b02d3bc39a81e2060cdd748189d87b77c65b8c366ed0c36cf87918f69d",
+      "bytes": 2208
+    },
+    {
+      "path": "workflow/stan/README.md",
+      "sha256": "be2f29ec5349eb69c7c61cbf206e7569a3b0350d8b81afc410dc45313d5a2485",
+      "bytes": 815
     },
     {
       "path": "workflow/stan/m2a.stan",

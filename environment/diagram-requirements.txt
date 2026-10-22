@@ -1,0 +1,15 @@
+cfgv==3.5.0
+diagrams==0.25.1
+distlib==0.4.4
+filelock==4.2.4
+graphviz==0.20.3
+identify==2.6.20
+Jinja2==3.1.6
+MarkupSafe==3.0.4
+nodeenv==1.11.0
+packaging==26.3
+platformdirs==4.13.5
+pre_commit==4.7.0
+python-discovery==1.6.4
+PyYAML==6.0.3
+virtualenv==21.14.12
