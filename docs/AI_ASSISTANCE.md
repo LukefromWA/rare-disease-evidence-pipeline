@@ -16,8 +16,3 @@ I enabled equivalent training-use restrictions from the beginning on my other AI
 
 I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the outset to prevent private data from being used for model training, and I checked those settings throughout the project. I applied equivalent training-use restrictions to my other AI accounts.
 
-## Scope
-
-I am describing the account settings I verified and how I used AI assistance. I am not claiming zero retention, an independent provider audit, organizer approval or clinical validation.
-
-I remain responsible for methodological decisions, reviewing assisted work and accurately describing my submission.
