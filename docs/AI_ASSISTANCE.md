@@ -5,36 +5,19 @@
 - Provider: Perplexity.
 - Plan/tier: Pro.
 - Primary uses: documentation, debugging and code/workflow integration.
-- Privacy configuration: the participant confirms that the relevant privacy
-  and data-usage settings were configured from the beginning to prevent
-  private data from being used for model training.
-- Verification: the participant reports checking and maintaining these
-  settings throughout the project.
+- Privacy configuration: I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training.
+- Verification: I checked and maintained those settings throughout the project.
 
 ## Other AI accounts
 
-The participant reports that equivalent restrictions on training use were
-enabled from the beginning on all other AI accounts used for the project.
-Where another service contributed to the submitted work, its provider,
-product and plan/tier should also be identified in the final methods record.
+I enabled equivalent training-use restrictions from the beginning on my other AI accounts. I will identify any additional contributing providers, products and tiers in my final methods record.
 
 ## Methods statement
 
-Perplexity (Pro tier) was used primarily for documentation, debugging and
-code/workflow integration. The participant configured the relevant privacy
-and data-usage settings from the beginning to prevent private data from
-being used for model training and reports verifying those settings
-throughout the project. Equivalent training-use restrictions were enabled
-from the outset on other AI accounts used for the project.
+I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the outset to prevent private data from being used for model training, and I checked those settings throughout the project. I applied equivalent training-use restrictions to my other AI accounts.
 
 ## Scope
 
-This disclosure records the participant's verified account configuration
-and the stated role of AI assistance. It does not assert zero retention,
-independent provider auditing, organizer approval or clinical validation.
+I am describing the account settings I verified and how I used AI assistance. I am not claiming zero retention, an independent provider audit, organizer approval or clinical validation.
 
-The project author remains responsible for methodological decisions,
-review of assisted work and the accuracy of the submission.
-
-No patient identifiers, variants, phenotype lists or case results are
-included in this disclosure.
+I remain responsible for methodological decisions, reviewing assisted work and accurately describing my submission.

@@ -1,71 +1,62 @@
-# Rare-Disease Evidence Pipeline
+# External training — retained Bayesian models
 
-Private development repository for evidence-preserving rare-disease
-candidate prioritization and mechanism-aware research exploration.
+I use this branch to document the external-model part of my rare-disease evidence pipeline. I trained four Stan specifications and retained three CV fold artifacts per specification. The downstream frozen predictor uses an equal-weight mixture of the three M3b fold components.
 
-## Status
+## Current import
 
-Source consolidation and reproducibility review are in progress.
-This initial repository contains documentation and ignore rules only.
-Reviewed code and synthetic tests will be imported in separate commits.
+Four Stan model definitions, checked diagnostic figure candidates, numeric diagnostic records and model pages are included. Training/scoring entrypoints and their full shared-library dependencies will be imported and tested separately. This is not yet a runnable end-to-end checkout.
 
-## Logical layers
+## M2a
 
-- A: private-case evidence processing and candidate ranking.
-- A11: ranking sensitivity under declared assumptions.
-- B: external-cohort preparation and model development.
-- C: frozen model application without private-case refitting.
-- C4/D0: candidate registry and mechanism-scenario handoff.
-- D: mechanism-aware discovery, gating and sensitivity.
-- E: case-independent resource preparation and validation.
-- F: run-specific reporting and provenance.
-- Release: reviewed export and packaging controls.
+[Model documentation and all three folds](models/m2a/README.md)
+
+![M2a overview](models/m2a/figures/m2a_overview_panel.png)
+
+## M2b
+
+[Model documentation and all three folds](models/m2b/README.md)
+
+![M2b overview](models/m2b/figures/m2b_overview_panel.png)
+
+## M3a
+
+[Model documentation and all three folds](models/m3a/README.md)
+
+![M3a overview](models/m3a/figures/m3a_overview_panel.png)
+
+## M3b
+
+[Model documentation and all three folds](models/m3b/README.md)
+
+![M3b overview](models/m3b/figures/m3b_overview_panel.png)
 
 ## Interpretation
 
-Normalized evidence weights, A11 rank frequencies and Stan predictive
-probabilities are different quantities and must remain separately labelled.
+All twelve recorded parameter gates passed the declared thresholds.
 
-The inspected Stan deployment adapter uses an equal-weight mixture of
-three retained cross-validation predictors, not a single full-data posterior.
-Provisional sampling qualifications must remain visible.
+Parameter diagnostics are not predictive validation. Recorded divergences remain qualified, treedepth is unverified, and conflicting historical summaries are preserved separately.
 
-Unavailable or disabled analyses must not be described as completed.
+Count / draws means recorded divergences divided by retained parameter draws. A verified post-warmup transition rate requires the same retained attempt and unthinned draws.
 
-## Data boundaries
+## OOF evaluation versus new-case inference
 
-Do not upload patient inputs, phenotype lists, private configuration,
-case-derived results, prediction objects, candidate registries, generated
-reports, credentials or the private consolidation workspace.
+An OOF prediction uses the component that excluded the evaluated case from training. The frozen three-component mixture is a distinct predictor for new cases, not the identical OOF predictor or one full-data posterior. Folds are not chains.
 
-Repository privacy does not authorize uploading protected data.
-Shared development should use reviewed code, schemas and synthetic fixtures.
+## Remaining work
 
-## Validation
+- Import the actual B-stage entrypoints, frozen-CV adapter and complete dependency closure.
+- Add tested training, OOF evaluation and frozen-inference instructions.
+- Add verified webshot PNG tables; the selector-warning screenshot is not assumed valid.
+- Resolve the recorded Tier A release gaps in a separate candidate change.
+- Review source, figure labels, data terms and event publication requirements before public release.
 
-Three export-boundary tests passed in the local development workspace.
-This is not complete privacy clearance or end-to-end scientific validation.
-The tests and reviewed implementation have not yet been imported here.
-
-## Intended use
-
-Computational research and human review only.
-Not a clinically validated diagnostic or treatment-selection system.
-
-## License
-
-Not yet selected. Third-party materials retain their own licenses.
+Raw chains, RDS bundles, private predictions, private configuration, datasets and original logs are not included. Public training-data origin does not automatically establish redistribution permission.
 
 ## AI assistance
 
-Perplexity (Pro tier) was used primarily for documentation, debugging and
-code/workflow integration. The participant confirms that relevant privacy
-and data-usage settings preventing private data from being used for model
-training were enabled from the beginning and checked throughout the project.
-Equivalent training-use restrictions were enabled from the outset on other
-AI accounts used for the project.
+I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training, and I checked those settings throughout the project. I enabled equivalent training-use restrictions from the outset on my other AI accounts.
 
-See [AI assistance disclosure](docs/AI_ASSISTANCE.md). Provider/product/tier
-details for any additional contributing service belong in the final methods
-record. This statement does not assert zero retention.
+I will identify any additional contributing providers, products and tiers in my final methods record. This describes the settings I verified; I am not claiming zero retention.
+
+See my [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
