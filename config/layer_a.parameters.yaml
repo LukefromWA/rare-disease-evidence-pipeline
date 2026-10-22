@@ -1,0 +1,30 @@
+# Scientific parameter record only; NOT a complete runnable configuration.
+# No private inputs, paths, identifiers or informed prior panel are included.
+run:
+  seed: 20261014
+qc:
+  dp_gt: 10
+  min_gq: 20
+  min_alt_reads: 4
+  max_af: 0.01
+  mosaic_vaf_range:
+  - 0.05
+  - 0.35
+  mosaic_min_alt_reads: 4
+ppr:
+  restart_probability: 0.85
+  phenotype_top_n: 20
+  string_min_score: 700
+  coupling: 0.5
+  max_pathway_size: 100
+integration:
+  channel_weights:
+    genomic: 0.45
+    hpo: 0.35
+    string: 0.1
+    multiplex: 0.1
+  alpha_boost: 2
+tier15:
+  B: 1000
+  top_m: 5
+  kappa: 100
