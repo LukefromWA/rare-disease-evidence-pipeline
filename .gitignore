@@ -7,3 +7,12 @@
 !/docs/
 /docs/*
 !/docs/AI_ASSISTANCE.md
+
+# Reviewed A11 code only; all other new workflow content stays ignored.
+!/workflow/
+/workflow/*
+!/workflow/scripts/
+/workflow/scripts/*
+!/workflow/scripts/make_a11_input.R
+!/workflow/scripts/run_a11.R
+!/workflow/scripts/attach_a11_multimodel.R
