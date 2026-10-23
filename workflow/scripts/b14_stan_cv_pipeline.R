@@ -1,5 +1,10 @@
 #!/usr/bin/env Rscript
 # Separate Stan CV-ensemble path; never calls sample() or freeze_model().
+.script_file <- grep("^--file=", commandArgs(FALSE), value=TRUE)
+if (length(.script_file) != 1L) stop("Invoke this entrypoint with Rscript.")
+.script_dir <- dirname(normalizePath(
+  sub("^--file=", "", .script_file), mustWork=TRUE
+))
 a <- commandArgs(trailingOnly=TRUE)
 if (!length(a) || length(a)%%2) stop("Use --mode build|score|calibrate and --key value pairs")
 opt <- as.list(a[seq(2,length(a),2)]); names(opt) <- sub("^--","",a[seq(1,length(a),2)])
@@ -9,11 +14,11 @@ yes <- function(k) identical(tolower(get(k,"no")),"yes")
 mode <- req("mode")
 for (pkg in c("data.table","posterior","cmdstanr","digest")) if(!requireNamespace(pkg,quietly=TRUE)) stop("Required package: ",pkg)
 suppressPackageStartupMessages(library(data.table))
-runner <- get("runner","written_final_scripts/workflow/lib/stan_runner.R")
-helpers <- get("helpers","scripts/Final Scripts/b14_stan_cv_helpers.R")
+runner <- get("runner",file.path(.script_dir,"..","lib","stan_runner.R"))
+helpers <- get("helpers",file.path(.script_dir,"b14_stan_cv_helpers.R"))
 if(!file.exists(runner)||!file.exists(helpers)) stop("Runner or companion helper not found")
 source(runner); source(helpers)
-stanpath <- file.path(get("stan-dir","written_final_scripts/workflow/stan"),"m3b.stan")
+stanpath <- file.path(get("stan-dir",file.path(.script_dir,"..","stan")),"m3b.stan")
 if(!file.exists(stanpath)) stop("Missing m3b.stan")
 sha <- function(p) digest::digest(file=p,algo="sha256")
 write_new <- function(x,path) {
