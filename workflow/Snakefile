@@ -1,0 +1,39 @@
+# workflow/Snakefile -- DAG only; all scientific logic lives in workflow/lib and workflow/scripts.
+# Run from anywhere:  MVA_ROOT=<project root> MVA_CONFIG=<abs config.yaml> snakemake -s workflow/Snakefile --directory $MVA_ROOT --cores 4
+import os, csv, yaml
+from snakemake.utils import update_config
+
+CFG = os.path.abspath(os.environ.get("MVA_CONFIG", "config/config.yaml"))
+configfile: CFG
+_priv = os.path.join(os.path.dirname(CFG), "config.private.yaml")
+if os.path.basename(CFG) == "config.yaml" and os.path.exists(_priv):                     # private overlay (gitignored); toy configs are self-contained
+    update_config(config, yaml.safe_load(open(_priv)) or {})
+SCRIPTS = os.path.join(workflow.basedir, "scripts")
+ROOT = os.path.abspath(os.environ.get("MVA_ROOT", "."))
+workdir: ROOT
+_sf = config["samples_file"] if os.path.isabs(config["samples_file"]) else os.path.join(ROOT, config["samples_file"])
+SAMPLES = [r["sample_id"] for r in csv.DictReader(open(_sf), delimiter="\t")]
+OUT = config["run"]["output_root"]; EXT = config["run"]["external_root"]; RES = config["track2"]["root"]; REG = config["track2"]["registry"]
+RSCRIPT = "Rscript --vanilla"
+
+include: "rules/a_private.smk"
+# B module excluded: reuse existing external artifacts only.
+include: "rules/c_frozen_inference.smk"
+include: "rules/e_track2_resources.smk"
+include: "rules/d_track2.smk"
+include: "rules/f_report.smk"
+
+rule all:
+    input:
+        expand(OUT + "/{sample}/a10/ranked_candidates.tsv.gz", sample=SAMPLES),
+        expand(OUT + "/{sample}/c4/final_hypothesis_set.tsv.gz", sample=SAMPLES),
+        expand(OUT + "/{sample}/d7/final_report.tsv", sample=SAMPLES),
+
+rule layer_a:
+    input: expand(OUT + "/{sample}/a10/ranked_candidates.tsv.gz", sample=SAMPLES)
+rule layer_b:
+    input: EXT + "/b14/frozen_M2.rds"
+rule layer_c:
+    input: expand(OUT + "/{sample}/c4/final_hypothesis_set.tsv.gz", sample=SAMPLES)
+rule layer_d:
+    input: expand(OUT + "/{sample}/d7/final_report.tsv", sample=SAMPLES)
