@@ -1,6 +1,6 @@
 # Rare-Disease Evidence Pipeline
 
-I built this pipeline to investigate rare-disease gene and variant hypotheses and carry the retained candidates into mechanism-aware drug-repurposing research. The analysis combines genomic evidence, phenotype similarity, network methods, and externally trained Bayesian models using R, Python, Stan, and Snakemake.
+I built this pipeline for the 2026 MVA Hackathon to investigate rare-disease gene and variant hypotheses and carry the retained candidates into mechanism-aware drug-repurposing research. The analysis combines genomic evidence, phenotype similarity, network methods, and externally trained Bayesian models using R, Python, Stan, and Snakemake.
 
 I keep case evidence, external model training, frozen inference, and downstream research separate so I can trace each result back to its inputs and assumptions. I want to understand why a candidate ranks highly, what evidence is missing, and how the ranking changes when those assumptions change.
 
@@ -516,19 +516,17 @@ Keep these quantities separately labeled:
 
 Reproduction requires more than matching filenames: check identifiers, schemas, row counts, split/group separation, B9/C1 feature parity, frozen-model behavior and the declared validation outputs.
 
-## Data boundaries and privacy status
+## Hackathon participation
 
-I limit the shared source export to reviewed code, documentation, schemas, and synthetic or public examples with the appropriate permissions. Controlled case inputs, private phenotype lists and configurations, genotype-scale derivatives, case predictions, candidate registries, generated case reports, credentials, and private consolidation material stay outside that export unless specifically cleared for the intended destination.
+I developed this project as part of the Hackathon, using the provided data to investigate rare-disease candidate hypotheses and possible directions for drug-repurposing research. The underlying individual-level dataset is not included in this repository.
 
-The retained B fits have external-training provenance. That does not replace the separate file-content and release reviews. A private repository is not permission to upload controlled data, and ignore rules do not remove files already tracked or present in history.
+## Acknowledgement
 
-The local preflight inventories files, history, and release assets. It does not fully inspect every opaque artifact, image, credential, or publication surface. A clean working tree, successful push, or matching checksum is not a completed privacy review.
+> This work was made possible through the Hackathon, organized by Sage Bionetworks in partnership with the MVA Society, Hugging Face, and BEACON (The Benchmarking, Evaluation, and Assessment Consortium for Science), with prize sponsorship from AWS and Anthropic. We are deeply grateful to the child and their family who generously contributed their data and their story to advance research into this rare disease. We acknowledge their trust in making this Hackathon possible.
 
-Three export-boundary tests were previously reported as passing in the local development workspace. Those tests and their reviewed implementation have not been imported into `main`. Their result is separate from end-to-end scientific validation and a complete release review.
+## License and submission reuse
 
-## License
-
-I still need to consolidate the repository license file. The submission must follow the hackathon's licensing requirements, and third-party materials retain their own licenses. Public availability alone does not grant redistribution rights.
+My Hackathon submission is subject to CC BY 4.0, as required by the organizers. The organizers may rerun the submission and share it with the research community, with attribution to me. Third-party software and resources retain their own licenses. See [LICENSE](LICENSE) for the license notice and official terms.
 
 ## AI assistance
 
