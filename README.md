@@ -1,14 +1,14 @@
 # Rare-Disease Evidence Pipeline
 
-An evidence-preserving research framework for rare-disease candidate prioritization, externally trained Bayesian ranking, and mechanism-aware drug-repurposing exploration.
+I built this pipeline to investigate rare-disease gene and variant hypotheses and carry the retained candidates into mechanism-aware drug-repurposing research. The analysis combines genomic evidence, phenotype similarity, network methods, and externally trained Bayesian models using R, Python, Stan, and Snakemake.
 
-I separate case evidence, external model development, frozen inference, and downstream research hypotheses so that each result can be traced to its inputs, assumptions and limitations. The aim is not just to produce a ranked list, but to explain what supports it, what is missing, and how it changes under alternative assumptions.
+I keep case evidence, external model training, frozen inference, and downstream research separate so I can trace each result back to its inputs and assumptions. I want to understand why a candidate ranks highly, what evidence is missing, and how the ranking changes when those assumptions change.
 
 ## Start here
 
-This project connects two research tasks: prioritizing rare-disease gene and variant hypotheses, then examining mechanism-aware drug-repurposing hypotheses. Genomic evidence, phenotype similarity, network scores, and frozen model predictions remain identifiable throughout the analysis rather than being treated as interchangeable measures.
+The project has two connected parts. Track 1 prepares and ranks candidate hypotheses. Track 2 examines their mechanisms and the evidence for possible drug-repurposing hypotheses. I retain the genomic, phenotype, network, and model-based evidence rather than treating their scores as interchangeable.
 
-The implementation is currently on the [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow). This page on `main` provides the project overview and methods; the links below take you to the corresponding source and execution records.
+The current implementation is on the [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow). I use this page on `main` for the project overview and methods. The links below lead to the source, execution guides, and checks completed so far.
 
 | Looking for | Start with |
 |---|---|
@@ -23,13 +23,13 @@ The implementation is currently on the [workflow branch](https://github.com/Luke
 
 ### Current execution status
 
-The repository master passed a local Snakemake dry run with a 39-job plan through A10, C4, and D7. That check used an existing private configuration, resource snapshots, frozen external artifacts, and a local R launcher. It verified workflow planning, not full execution or reproduction from a fresh checkout.
+I checked the repository master with a local Snakemake dry run. It produced a 39-job plan through A10, C4, and D7 using my existing private configuration, resource snapshots, frozen external artifacts, and local R launcher. The dry run checked the execution plan; I have not yet verified the full analysis or a fresh-checkout setup for this checkpoint.
 
-The master reuses external model artifacts rather than running B training. Its `all` target requests A10 ranked candidates, C4 hypotheses, and the D7 report table. A11, optional Track 2 analyses, and PDF reporting have separate execution paths. A complete master configuration example and portable environment restoration are still being prepared.
+The master reuses the external model artifacts rather than running B training. Its `all` target requests A10 ranked candidates, C4 hypotheses, and the D7 report table. A11, optional Track 2 analyses, and PDF reporting have separate execution paths. I still need to finish the master configuration example and verify portable environment restoration.
 
 ### Repository map
 
-The tree below shows selected paths on the `workflow` branch, not the contents of a fresh checkout of `main`. Reference bundles, populated private configurations, and case results are not included in this map.
+This tree shows selected paths on the `workflow` branch. It is not the file tree of `main`. Reference bundles, populated private configurations, and case results are kept outside this overview.
 
 ```text
 rare-disease-evidence-pipeline/          # workflow branch
@@ -66,7 +66,7 @@ rare-disease-evidence-pipeline/          # workflow branch
 
 ### Execution and data flow
 
-This diagram separates external model development from the case workflow. It complements the scientific overview below; it is not a claim that every illustrated component runs under the master `all` target.
+I develop the external models separately from the case analysis, then apply the frozen models without refitting them on the case. The diagram shows those relationships; separate reporting and optional analyses are not all included in the master `all` target.
 
 ```mermaid
 flowchart LR
@@ -84,24 +84,25 @@ flowchart LR
     DREPORT --> FREPORT["F: separate reporting targets"]
 ```
 
-The current D1 implementation carries the configured mechanism priors forward without an evidence-based probability update. D4 combines direction compatibility, pathway overlap, and propagation evidence where available; other research outputs are not eight active aggregate-scoring channels. Software presence, method availability, and completed validation are recorded separately.
+D1 currently carries the configured mechanism priors forward without an evidence-based probability update. D4 combines direction compatibility, pathway overlap, and propagation evidence where available. The other research outputs are not eight active channels in the aggregate score. I distinguish the methods present in the code, the methods enabled for a run, and the checks that have actually completed.
 
 ## Repository status and navigation
 
-This README describes the workflow and its mathematical contracts. It is not a claim that every stage is already imported, enabled or validated end to end on `main`.
+The sections below explain the scientific methods and assumptions. Implementation and validation status are recorded separately so the mathematical description is not mistaken for a completed end-to-end run.
 
-- `main` currently contains the portfolio overview and development-policy documentation.
-- The [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) contains the imported Stan definitions, retained-fit diagnostic material and model documentation. These files are not merged by this README update.
+- `main` contains the portfolio overview, model documentation, software record, and development-policy documentation.
+- The [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow) contains the integrated source and execution records.
+- The [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) contains the imported Stan definitions, retained-fit diagnostics, and model documentation. This README edit does not merge those branches.
 - [Model documentation](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/models) explains the four fitted specifications.
-- [Stan definitions](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/workflow/stan) are the executable reference for the equations below.
-- [Environment records](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/environment) record the imported tooling environment.
-- [AI assistance disclosure](docs/AI_ASSISTANCE.md) records the current disclosure.
+- [Stan definitions](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/workflow/stan) are the executable reference for the model equations below.
+- [Environment records](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/environment) describe the imported training environment.
+- [AI assistance disclosure](docs/AI_ASSISTANCE.md) explains how I used AI tools in the project.
 
-There is not yet a verified one-command reproduction path from a fresh checkout of `main`. Unavailable analyses and teaching stand-ins must remain labeled rather than presented as completed production methods.
+I have not yet verified a one-command reproduction from a fresh checkout of `main`. Unavailable methods and teaching examples stay labeled rather than being presented as completed production analyses.
 
 ## Workflow overview
 
-A processes case evidence. B develops models using external public training data and does not train on the hackathon child's genome. C applies the frozen B artifacts to case features without refitting. Track 2 receives the union of the retained A and C candidate outputs, preserving their distinct evidence views. D evaluates mechanism-aware research hypotheses; E supplies validated reference resources; F reports the results and provenance.
+I use A to prepare and rank case evidence, B to develop models from external public data, and C to apply the frozen B artifacts without refitting. The external models are not trained on the hackathon child's genome. Track 2 receives the union of the retained A and C candidates while preserving their separate evidence views. D handles mechanism-aware research, E prepares reference resources, and F assembles reports and provenance.
 
 ```mermaid
 flowchart TD
@@ -119,13 +120,13 @@ flowchart TD
     D --> F[F: reporting and provenance]
 ```
 
-The union is a candidate-registry operation, not an addition of scores:
+The union combines candidate registries, not their scores:
 
 ```math
 \mathcal H_{\mathrm{Track\ 2}}=\mathcal H_A\cup\mathcal H_C.
 ```
 
-Align candidate identifiers and preserve source membership, underlying genomic evidence, coverage and the separate A/C scores. Do not silently drop A-only candidates or treat different score types as interchangeable. The diagram is an overview, not an exhaustive list of resource dependencies.
+I align candidate identifiers and retain source membership, genomic evidence, coverage, and the separate A/C scores. A-only candidates should not disappear because C lacks a prediction, and different score types should not be treated as equivalent. The diagram summarizes the analysis rather than showing every resource dependency.
 
 ## A — Case evidence preparation and ranking
 
@@ -275,7 +276,7 @@ The build guide also groups stability/influence calculations with the A9 robustn
 
 ## B — External-cohort preparation and model development
 
-B uses external public training data. It does not read or train on the hackathon child's genomic data. The retained model-fold artifacts come from this external-training branch of the analysis.
+I fitted the external models using public training data, not the hackathon child's genomic data. The retained fold artifacts come from that external-training analysis.
 
 ### B1–B7: eligibility, labels, group audits and deduplication
 
@@ -283,7 +284,7 @@ Screen and parse source records, distinguish observed from explicitly excluded p
 
 The deduplication contract must record the actual grouping fields, conflict policy, representative-selection rule and exclusion reasons. Publication or phenotype resemblance can require review; a packet identifier alone is not evidence that two records are independent.
 
-Output: external cases, canonical labels, duplicate-group identifiers and auditable inclusion/exclusion records. This README does not invent duplicate counts or certify a no-overlap result without the corresponding audit.
+Output: external cases, canonical labels, duplicate-group identifiers and auditable inclusion/exclusion records. Duplicate counts and no-overlap conclusions need the corresponding audit records.
 
 ### B8 → B10 → B9: candidates, splits, then features
 
@@ -517,17 +518,17 @@ Reproduction requires more than matching filenames: check identifiers, schemas, 
 
 ## Data boundaries and privacy status
 
-This portfolio's public-facing export is restricted to reviewed code, documentation, schemas and synthetic/public examples with appropriate permissions. Keep controlled case inputs, private phenotype lists/configuration, genotype-scale derivatives, case prediction objects, candidate registries, generated case reports, credentials and private consolidation material outside that export unless specifically cleared for the intended destination.
+I limit the shared source export to reviewed code, documentation, schemas, and synthetic or public examples with the appropriate permissions. Controlled case inputs, private phenotype lists and configurations, genotype-scale derivatives, case predictions, candidate registries, generated case reports, credentials, and private consolidation material stay outside that export unless specifically cleared for the intended destination.
 
-External provenance is established for the retained B training fits; file-content and release reviews still remain separate checks. Repository privacy does not itself authorize uploading controlled data. Ignore rules do not remove previously tracked files or history.
+The retained B fits have external-training provenance. That does not replace the separate file-content and release reviews. A private repository is not permission to upload controlled data, and ignore rules do not remove files already tracked or present in history.
 
-The current local preflight inventories files/history and release assets but does not certify that opaque artifacts, images, credentials and every publication surface have been cleared. A clean working tree, successful push or matching checksum is not privacy approval.
+The local preflight inventories files, history, and release assets. It does not fully inspect every opaque artifact, image, credential, or publication surface. A clean working tree, successful push, or matching checksum is not a completed privacy review.
 
-Three export-boundary tests were previously reported as passing in the local development workspace. The tests and reviewed implementation are not yet imported into `main`; that result is not end-to-end scientific validation or complete privacy clearance.
+Three export-boundary tests were previously reported as passing in the local development workspace. Those tests and their reviewed implementation have not been imported into `main`. Their result is separate from end-to-end scientific validation and a complete release review.
 
 ## License
 
-The repository license file is pending consolidation. Participant-submission licensing must follow the hackathon requirements; third-party materials retain their own licenses. Do not infer redistribution rights from public availability.
+I still need to consolidate the repository license file. The submission must follow the hackathon's licensing requirements, and third-party materials retain their own licenses. Public availability alone does not grant redistribution rights.
 
 ## AI assistance
 
@@ -538,4 +539,4 @@ See the [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
 ## Intended use
 
-Computational research and human review only. This is not a clinically validated diagnostic or treatment-selection system. Candidate ranks, allele-fraction models and repurposing hypotheses do not by themselves establish diagnosis, pathogenicity, mosaicism, causality, safety or treatment efficacy.
+I built this for computational research and human review, not clinical diagnosis or treatment selection. Candidate ranks, allele-fraction models, and drug-repurposing hypotheses do not by themselves establish diagnosis, pathogenicity, mosaicism, causality, safety, or treatment efficacy.
