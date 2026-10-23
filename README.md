@@ -454,6 +454,8 @@ I used Perplexity Pro primarily for documentation, debugging and code/workflow i
 
 See the [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
+Scientific literature, data-resource attribution and software citations are collected in the [citation register](docs/CITATIONS.md). The [observed software-version table](environment/software_versions.observed.tsv) distinguishes participant-observed no-training/runtime versions from unverified historical training versions.
+
 ## Intended use
 
 Computational research and human review only. This is not a clinically validated diagnostic or treatment-selection system. Candidate ranks, allele-fraction models and repurposing hypotheses do not by themselves establish diagnosis, pathogenicity, mosaicism, causality, safety or treatment efficacy.
