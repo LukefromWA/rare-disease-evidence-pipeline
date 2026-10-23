@@ -1,0 +1,76 @@
+# Standalone A11 calculation -> report -> optional union attachment.
+# This is not the complete A0-F master workflow.
+from pathlib import Path
+import shlex
+
+WF = Path(workflow.basedir).parent.resolve()
+A11 = config["a11"]
+RUN = A11["output_dir"]
+REPORT = config["a11_report"]["output_dir"]
+ATTACH = config.get("a11_attachment", {})
+DO_ATTACH = bool(ATTACH.get("enabled", False))
+RUNTIME = str(WF / "lib" / "a11_runtime.R")
+focus = str(A11.get("focus_gene", ""))
+FOCUS_ARG = "--focus-gene " + shlex.quote(focus) if focus else ""
+if len({str(Path(p).resolve()) for p in [RUN, REPORT] + ([ATTACH["output_dir"]] if DO_ATTACH else [])}) != 2 + int(DO_ATTACH):
+    raise ValueError("A11 calculation, report and attachment need distinct output directories")
+
+rule all:
+    input:
+        [RUN, REPORT] + ([ATTACH["output_dir"]] if DO_ATTACH else [])
+
+rule a11_dependence_sensitivity:
+    input:
+        evidence=A11["evidence"],
+        script=str(WF / "layer_a" / "scripts" / "a11_dependence_sensitivity.R"),
+        runtime=RUNTIME
+    output:
+        run=directory(RUN)
+    params:
+        seed=int(A11.get("seed", 20260912)),
+        draws=int(A11.get("draws", 10000)),
+        focus=FOCUS_ARG
+    shell:
+        "Rscript --vanilla {input.script:q} --input {input.evidence:q} --outdir {output.run:q} "
+        "--seed {params.seed} --draws {params.draws} {params.focus}"
+
+rule a11_coverage_report:
+    input:
+        run=rules.a11_dependence_sensitivity.output.run,
+        evidence=A11["evidence"],
+        script=str(WF / "layer_f" / "scripts" / "f_a11_coverage_report.R"),
+        runtime=RUNTIME
+    output:
+        report=directory(REPORT)
+    params:
+        consensus=str(Path(RUN)/"bayesian_dependence_sensitivity_ensemble_consensus.csv"),
+        copula=str(Path(RUN)/"copula_dependence_summary.csv"),
+        manifest=str(Path(RUN)/"run_provenance.json"),
+        focus=FOCUS_ARG
+    shell:
+        "Rscript --vanilla {input.script:q} --input {input.evidence:q} "
+        "--consensus {params.consensus:q} --copula {params.copula:q} "
+        "--a11-manifest {params.manifest:q} --outdir {output.report:q} {params.focus}"
+
+if DO_ATTACH:
+    rule attach_a11_to_union:
+        input:
+            run=rules.a11_dependence_sensitivity.output.run,
+            evidence=A11["evidence"],
+            union_manifest=str(Path(ATTACH["union_dir"])/"manifest.json"),
+            registry=str(Path(ATTACH["union_dir"])/"candidate_registry.tsv"),
+            scenarios=str(Path(ATTACH["union_dir"])/"current_Stan_scenarios.tsv"),
+            variants=str(Path(ATTACH["union_dir"])/"shortlisted_variant_evidence.tsv"),
+            protected=str(Path(ATTACH["union_dir"])/"protected_unscored_candidates.tsv"),
+            script=str(WF / "layer_c" / "scripts" / "attach_a11_multimodel.R"),
+            runtime=RUNTIME
+        output:
+            bundle=directory(ATTACH["output_dir"])
+        params:
+            union=ATTACH["union_dir"],
+            consensus=str(Path(RUN)/"bayesian_dependence_sensitivity_ensemble_consensus.csv"),
+            manifest=str(Path(RUN)/"run_provenance.json")
+        shell:
+            "Rscript --vanilla {input.script:q} --union {params.union:q} "
+            "--consensus {params.consensus:q} --a11_input {input.evidence:q} "
+            "--a11_manifest {params.manifest:q} --outdir {output.bundle:q}"

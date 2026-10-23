@@ -1,0 +1,13 @@
+# Paths are examples, not included patient inputs. Keep populated config private.
+a11:
+  evidence: inputs/candidate_evidence.csv
+  output_dir: results/a11_dependence
+  seed: 20260912
+  draws: 10000
+  focus_gene: ""
+a11_report:
+  output_dir: results/a11_coverage_report
+a11_attachment:
+  enabled: false
+  union_dir: results/current_union
+  output_dir: results/a11_union_attachment
