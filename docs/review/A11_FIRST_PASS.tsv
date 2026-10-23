@@ -1,0 +1,5 @@
+id	area	status	finding	required_action
+A11-R01	coverage_reporting	OPEN	Eligible genomic-plus-network candidates can receive other_or_unscorable	Add explicit valid partial-view coverage categories without changing scores
+A11-R02	review_labels	OPEN	A_robust_lead is assigned by rank alone	Use neutral rank labels; keep stability classification separate
+A11-R03	CLI	OPEN	Empty arguments are checked after sequence construction	Handle empty arguments first and test the usage error
+A11-R04	environment	OPEN	Tested package versions recorded; clean restoration not tested	Test environment restoration separately
