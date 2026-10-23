@@ -4,6 +4,88 @@ An evidence-preserving research framework for rare-disease candidate prioritizat
 
 I separate case evidence, external model development, frozen inference, and downstream research hypotheses so that each result can be traced to its inputs, assumptions and limitations. The aim is not just to produce a ranked list, but to explain what supports it, what is missing, and how it changes under alternative assumptions.
 
+## Start here
+
+This project connects two research tasks: prioritizing rare-disease gene and variant hypotheses, then examining mechanism-aware drug-repurposing hypotheses. Genomic evidence, phenotype similarity, network scores, and frozen model predictions remain identifiable throughout the analysis rather than being treated as interchangeable measures.
+
+The implementation is currently on the [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow). This page on `main` provides the project overview and methods; the links below take you to the corresponding source and execution records.
+
+| Looking for | Start with |
+|---|---|
+| Analysis stages and entrypoints | [Workflow guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md) |
+| Master workflow | [workflow/Snakefile](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/Snakefile) |
+| Stage dependencies and commands | [Rule modules](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/rules) |
+| Calculations and shared functions | [Scripts](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/scripts) and [workflow library](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/lib) |
+| External training and retained-fit records | [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) |
+| Standalone ranking-sensitivity analysis | [A11 execution guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/A11_REPRODUCIBILITY.md) |
+| Software versions and citations | [Software record](docs/SOFTWARE.md) |
+| Completed checks and remaining setup | [Master workflow checkpoint](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/MASTER_WORKFLOW_CHECKPOINT.md) |
+
+### Current execution status
+
+The repository master passed a local Snakemake dry run with a 39-job plan through A10, C4, and D7. That check used an existing private configuration, resource snapshots, frozen external artifacts, and a local R launcher. It verified workflow planning, not full execution or reproduction from a fresh checkout.
+
+The master reuses external model artifacts rather than running B training. Its `all` target requests A10 ranked candidates, C4 hypotheses, and the D7 report table. A11, optional Track 2 analyses, and PDF reporting have separate execution paths. A complete master configuration example and portable environment restoration are still being prepared.
+
+### Repository map
+
+The tree below shows selected paths on the `workflow` branch, not the contents of a fresh checkout of `main`. Reference bundles, populated private configurations, and case results are not included in this map.
+
+```text
+rare-disease-evidence-pipeline/          # workflow branch
+├── README.md                           # Project overview and methods
+├── config/
+│   ├── a11.example.yaml                # Standalone A11 example
+│   └── layer_a.parameters.yaml         # Reviewed Layer A parameter record
+├── environment/
+│   ├── a11-snakemake-test.requirements.txt
+│   └── no-training.renv.lock            # Recorded lean R environment
+├── workflow/
+│   ├── Snakefile                       # No-training master entrypoint
+│   ├── rules/                          # Stage dependencies and commands
+│   ├── scripts/                        # Executable analysis stages
+│   ├── lib/                            # Shared calculations and validation
+│   ├── stan/                           # Bayesian model definitions
+│   └── layer_a/
+│       └── Snakefile                   # Standalone A11 entrypoint
+├── models/                             # Model specifications and interpretation
+└── docs/                               # Methods, validation and checkpoints
+```
+
+### Analysis components
+
+| Component | Scientific role | Main handoff |
+|---|---|---|
+| A | Prepare case evidence, apply QC, compare phenotype/network views, and rank candidates | Candidate evidence, coverage, rankings, and audit records |
+| A11 | Examine ranking sensitivity under specified perturbations | Sensitivity summaries, kept distinct from causal probabilities |
+| B | Develop models from external public cases | Frozen models, preprocessing state, and evaluation records |
+| C | Apply the frozen feature/model contract without case-specific refitting | Model-based candidate results |
+| D | Examine mechanism scenarios, targets, compound evidence, gates, and sensitivity | Qualified research hypotheses |
+| E | Prepare and validate reference resources | Versioned resource bundles and readiness records |
+| F | Assemble saved outputs and provenance | Reviewable tables, figures, and reports |
+
+### Execution and data flow
+
+This diagram separates external model development from the case workflow. It complements the scientific overview below; it is not a claim that every illustrated component runs under the master `all` target.
+
+```mermaid
+flowchart LR
+    PUBLIC["External public cases"] --> BTRAIN["B: training and evaluation"]
+    BTRAIN --> FROZEN["Frozen models and preprocessing"]
+    CASE["Authorized case inputs"] --> AEVID["A: evidence and ranking"]
+    AEVID --> CINFER["C: frozen inference"]
+    FROZEN --> CINFER
+    AEVID --> UNION["Retained A union C registry"]
+    CINFER --> UNION
+    UNION --> DRESEARCH["D: mechanism and compound research"]
+    ERES["E: versioned resources"] --> DRESEARCH
+    DRESEARCH --> DGATE["Direction, safety and feasibility review"]
+    DGATE --> DREPORT["Sensitivity and D7 report table"]
+    DREPORT --> FREPORT["F: separate reporting targets"]
+```
+
+The current D1 implementation carries the configured mechanism priors forward without an evidence-based probability update. D4 combines direction compatibility, pathway overlap, and propagation evidence where available; other research outputs are not eight active aggregate-scoring channels. Software presence, method availability, and completed validation are recorded separately.
+
 ## Repository status and navigation
 
 This README describes the workflow and its mathematical contracts. It is not a claim that every stage is already imported, enabled or validated end to end on `main`.
