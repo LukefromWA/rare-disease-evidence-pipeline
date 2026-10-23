@@ -146,7 +146,13 @@ missing <- setdiff(required, names(dat))
 if (length(missing)) stop("Missing columns: ", paste(missing, collapse = ", "))
 
 for (nm in c("genomic", "hpo", "string", "multiplex")) {
-  dat[, (nm) := as.numeric(get(nm))]
+  raw <- dat[[nm]]
+  numeric_value <- suppressWarnings(as.numeric(raw))
+  if (any(!is.na(raw) & is.na(numeric_value)) ||
+      any(is.nan(numeric_value) | is.infinite(numeric_value))) {
+    stop(nm, " contains invalid numeric or nonfinite values.")
+  }
+  dat[, (nm) := numeric_value]
   bad <- is.finite(dat[[nm]]) & (dat[[nm]] < 0 | dat[[nm]] > 1)
   if (any(bad)) stop(nm, " contains values outside [0, 1].")
 }

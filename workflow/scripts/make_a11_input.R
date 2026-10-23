@@ -53,6 +53,14 @@ for (nm in c("genomic", "hpo", "string", "multiplex")) {
   }
 }
 
+if (anyNA(out$gene_symbol) ||
+    any(!nzchar(trimws(as.character(out$gene_symbol))))) {
+  stop("Gene symbols must be present and nonblank.")
+}
+for (nm in c("genomic","hpo","string","multiplex")) {
+  data.table::set(out, j=paste0("has_",nm),
+                  value=is.finite(out[[nm]]))
+}
 if (file.exists(args[2])) stop("Output already exists; refusing to overwrite.")
 dir.create(dirname(args[2]), recursive = TRUE, showWarnings = FALSE)
 fwrite(out, args[2])

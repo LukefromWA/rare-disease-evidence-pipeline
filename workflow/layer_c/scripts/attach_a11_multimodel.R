@@ -3,10 +3,8 @@
 .source_file <- normalizePath(sub("^--file=", "", grep("^--file=",commandArgs(FALSE),value=TRUE)[1]))
 .runtime_file <- normalizePath(file.path(dirname(.source_file),"..","..","lib","a11_runtime.R"))
 source(.runtime_file)
-a <- commandArgs(trailingOnly = TRUE)
-if (!length(a) || length(a) %% 2L) stop("Use --union DIR --consensus CSV --a11_input CSV --a11_manifest JSON --outdir NEW_DIR")
-o <- as.list(a[seq(2L,length(a),2L)]); names(o) <- sub("^--","",a[seq(1L,length(a),2L)])
-req <- function(k) { if (is.null(o[[k]]) || !nzchar(o[[k]])) stop("Missing --",k); o[[k]] }
+o <- a11_cli(c("union","consensus","a11_input","a11_manifest","outdir"))
+req <- function(k) o[[k]]
 for (p in c("data.table","digest","jsonlite")) if (!requireNamespace(p,quietly=TRUE)) stop("Required package: ",p)
 suppressPackageStartupMessages(library(data.table))
 u <- req("union"); dest <- req("outdir")
@@ -45,25 +43,75 @@ if (file.exists(mp)) inputs <- c(inputs,a11_run_manifest=mp)
 input_sha <- vapply(inputs,sha,character(1))
 reg <- read_tab(inputs[["registry"]]); stan <- read_tab(inputs[["stan_scenarios"]]); cons <- read_tab(inputs[["consensus"]]); inp <- read_tab(inputs[["a11_input"]])
 need(reg,c("hypothesis_id","gene","variant","in_A10","stan_probability"),"Union registry")
-need(stan,c("hypothesis_id","gene","variant","q_j","mechanism","p_m","scenario_weight"),"Stan scenarios")
+need(stan,c("hypothesis_id","scenario_id","gene","variant","q_j","mechanism","p_m","scenario_weight"),"Stan scenarios")
 need(cons,c("candidate_id","gene_symbol","posterior_score_mean","p_rank1","p_top3","p_top5","p_top10"),"A11 consensus")
 need(inp,c("candidate_id","gene_symbol","genomic","hpo","string","multiplex"),"A11 input")
+assert_ids <- function(x,cols,label) {
+  for (nm in cols) {
+    v <- as.character(x[[nm]])
+    if (anyNA(v) || any(!nzchar(trimws(v)))) {
+      stop(label, " has missing or blank ", nm)
+    }
+  }
+}
+assert_ids(reg,c("hypothesis_id","gene","variant"),"Registry")
+assert_ids(stan,c("hypothesis_id","scenario_id","gene","variant","mechanism"),"Stan scenarios")
+assert_ids(cons,c("candidate_id","gene_symbol"),"Consensus")
+assert_ids(inp,c("candidate_id","gene_symbol"),"A11 input")
+if (!nrow(reg) || !nrow(stan) || !nrow(cons) || !nrow(inp)) {
+  stop("Registry, scenarios, consensus and A11 input must be nonempty.")
+}
 if (anyDuplicated(reg$hypothesis_id)) stop("Duplicate registry hypotheses")
+if (anyDuplicated(stan$scenario_id)) stop("Duplicate Stan scenario IDs")
 rk <- key(reg$gene,canon(reg$variant)); ck <- key(cons$gene_symbol,canon(cons$candidate_id)); ik <- key(inp$gene_symbol,canon(inp$candidate_id))
 if (anyDuplicated(rk) || anyDuplicated(ck) || anyDuplicated(ik)) stop("Duplicate gene/allele keys")
-current <- flag(reg$in_A10)
+membership <- toupper(trimws(as.character(reg$in_A10)))
+if (anyNA(membership) ||
+    any(!membership %in% c("TRUE","T","1","FALSE","F","0"))) {
+  stop("Invalid in_A10 membership flag.")
+}
+reg[, in_A10 := membership %in% c("TRUE","T","1")]
+current <- reg$in_A10
 if (!setequal(ik,rk[current])) stop("A11 input does not match complete current A10 registry")
 if (!all(ck %in% rk[current])) stop("Consensus has candidates outside current A10")
 for (nm in c("p_rank1","p_top3","p_top5","p_top10")) {
   v <- cons[[nm]]
   if (!is.numeric(v) || any(!is.finite(v)) || any(v<0 | v>1)) stop("Invalid A11 probability field: ",nm)
 }
+if (any(cons$p_rank1 > cons$p_top3 + 1e-12 |
+        cons$p_top3 > cons$p_top5 + 1e-12 |
+        cons$p_top5 > cons$p_top10 + 1e-12)) {
+  stop("A11 rank frequencies must satisfy rank1 <= top3 <= top5 <= top10.")
+}
 if (abs(sum(cons$p_rank1)-1)>1e-6) stop("A11 p_rank1 does not sum to 1; do not silently renormalize")
-if (!is.numeric(reg$stan_probability) || any(!is.finite(reg$stan_probability[current])) || abs(sum(reg$stan_probability[current])-1)>1e-8) stop("Invalid current Stan weights")
+if (!is.numeric(reg$stan_probability) ||
+    any(!is.finite(reg$stan_probability[current])) ||
+    any(reg$stan_probability[current] < 0 | reg$stan_probability[current] > 1) ||
+    abs(sum(reg$stan_probability[current])-1)>1e-8) {
+  stop("Invalid current Stan weights")
+}
 if (!all(unique(stan$hypothesis_id) %in% reg$hypothesis_id[current]) || !setequal(unique(stan$hypothesis_id),reg$hypothesis_id[current])) stop("Stan scenario/registry mismatch")
 if (anyDuplicated(stan[,.(hypothesis_id,mechanism)])) stop("Duplicate mechanism scenarios")
 if (any(!is.finite(stan$p_m)) || any(stan$p_m<0 | stan$p_m>1) || any(stan[,abs(sum(p_m)-1)>1e-8,by=hypothesis_id]$V1)) stop("Invalid mechanism priors")
-if (any(abs(stan$q_j-reg$stan_probability[match(stan$hypothesis_id,reg$hypothesis_id)])>1e-12)) stop("Stan q_j differs from saved registry")
+for (nm in c("q_j","p_m","scenario_weight")) {
+  v <- stan[[nm]]
+  if (!is.numeric(v) || any(!is.finite(v)) || any(v < 0 | v > 1)) {
+    stop("Invalid Stan scenario field: ",nm)
+  }
+}
+si <- match(stan$hypothesis_id,reg$hypothesis_id)
+if (any(abs(stan$q_j-reg$stan_probability[si])>1e-12)) {
+  stop("Stan q_j differs from saved registry")
+}
+if (any(key(stan$gene,canon(stan$variant)) != rk[si])) {
+  stop("Stan scenario gene/allele differs from registry hypothesis.")
+}
+expected_weight <- stan$q_j * stan$p_m
+if (abs(sum(expected_weight)-1)>1e-8 ||
+    abs(sum(stan$scenario_weight)-1)>1e-8 ||
+    any(abs(stan$scenario_weight-expected_weight)>1e-8)) {
+  stop("Saved Stan scenario weights do not match q_j * p_m.")
+}
 ci <- match(rk,ck)
 for (nm in names(cons)) set(reg,j=paste0("a11_",nm),value=cons[[nm]][ci])
 reg[, a11_scored := !is.na(ci)]
@@ -122,7 +170,7 @@ contract <- c(
  "Source presence/sum checks are integrity checks, not statistical validation."
 )
 writeLines(contract,file.path(dest,"HANDOFF_CONTRACT.txt"))
-manifest <- list(version="A11_multimodel_handoff_v1_1",time_utc=format(Sys.time(),tz="UTC",usetz=TRUE),
+manifest <- list(version="A11_multimodel_handoff_v1_2_validation_provenance",time_utc=format(Sys.time(),tz="UTC",usetz=TRUE),
  inputs=lapply(seq_along(inputs),function(i) list(role=names(inputs)[i],path=normalizePath(inputs[i]),sha256=unname(input_sha[i]))),
  outputs=lapply(paths,function(n) list(path=n,sha256=sha(file.path(dest,n)))),
  counts=list(union=nrow(reg),current_A10=sum(current),A11_scored=nrow(cons),current_A10_missing_A11=sum(current & !reg$a11_scored),Stan_scenarios=nrow(stan),A11_rank_sensitivity_scenarios=nrow(a11)),
