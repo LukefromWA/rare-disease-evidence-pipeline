@@ -73,3 +73,24 @@ A repository-wide locked environment and the full master DAG remain pending.
 - Bayesian_Dependence_Aware_Variant_Ranking_final.r: `d7d4c54db0073a59af0d3d70f585054e373ad0bb7b1a48d96e72f21cb4b166d8`
 - 13_make_bayesian_coverage_report.r: `d06cf6cd501c35ecd180f4e27ac6ff5c3c719388358dedc1a08872214b6ebf38`
 - attach_a11_multimodel_v1_1.R: `33070452d8bee77c741650422b4f547cc0e540e49cdd8996fb7a475938185102`
+
+
+## Reporting/CLI review correction
+Coverage labels explicitly distinguish genomic+HPO, genomic+network,
+HPO+network and three-view cases with a partial network representation.
+Network views still count as one conceptual evidence view. Original score
+thresholds are unchanged. Review tiers now describe rank ranges, not claimed
+robustness; rank_stability_class remains separate and unchanged.
+The summary metric n_two_view_supported is now n_two_view_genomic_hpo.
+These are intentional presentation/schema-label changes, not score changes.
+Numerical/candidate/schema regression remains in place, excluding only the
+two intentionally changed annotation columns; new tests assert their values.
+Empty CLI arguments now produce the required-input diagnostic before any
+attempt to construct argument index sequences.
+
+
+## Public-source packaging
+Internal synthetic test scripts are retained locally, not distributed
+in this source tree. See VALIDATION.md for the public validation scope.
+The implementation and its execution/configuration interfaces remain
+available; the exact internal validation suite is not included.

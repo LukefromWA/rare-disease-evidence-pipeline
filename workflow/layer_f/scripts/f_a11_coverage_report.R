@@ -82,34 +82,40 @@ out[, coverage_class := fcase(
   "three_view_mixed",
 
   has_genomic & has_hpo & !has_string & !has_multiplex,
-  "two_view_supported",
+  "two_view_genomic_hpo",
 
   has_genomic & has_hpo & (has_string | has_multiplex),
-  "two_view_plus_partial_network",
+  "three_view_partial_network",
+
+  has_genomic & !has_hpo & (has_string | has_multiplex),
+  "two_view_genomic_network",
+
+  !has_genomic & has_hpo & (has_string | has_multiplex),
+  "two_view_hpo_network",
 
   evidence_view_count == 1L,
-  "single_view_provisional",
+  "single_view_only",
 
-  default = "other_or_unscorable"
+  default = "no_usable_evidence"
 )]
 
 out[, review_tier := fcase(
   posterior_rank == 1L,
-  "A_robust_lead",
+  "rank_1",
 
   posterior_rank == 2L,
-  "B_principal_alternative",
+  "rank_2",
 
   posterior_rank == 3L,
-  "C_high_priority_review",
+  "rank_3",
 
   posterior_rank <= 10L,
-  "D_secondary_shortlist",
+  "ranks_4_to_10",
 
   posterior_rank <= 25L,
-  "E_extended_review",
+  "ranks_11_to_25",
 
-  default = "F_lower_priority"
+  default = "ranks_26_plus"
 )]
 
 out[, rank_stability_class := fcase(
@@ -151,7 +157,7 @@ summary_table <- data.table(
     "n_ranked_candidates",
     "n_three_view_concordant",
     "n_three_view_mixed",
-    "n_two_view_supported",
+    "n_two_view_genomic_hpo",
     "n_rank1_robust",
     "n_top3_robust",
     "focus_gene_p_rank1",
@@ -165,7 +171,7 @@ summary_table <- data.table(
     nrow(full),
     sum(full$coverage_class == "three_view_concordant"),
     sum(full$coverage_class == "three_view_mixed"),
-    sum(full$coverage_class == "two_view_supported"),
+    sum(full$coverage_class == "two_view_genomic_hpo"),
     sum(full$rank_stability_class == "rank1_robust"),
     sum(full$rank_stability_class == "top3_robust"),
     if (nrow(focus)) sprintf("%.6f", focus$p_rank1[1]) else NA_character_,

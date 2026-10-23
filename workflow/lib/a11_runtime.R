@@ -3,8 +3,7 @@ a11_sha <- function(p) digest::digest(file=p, algo="sha256")
 a11_cli <- function(required, defaults=list()) {
   x <- commandArgs(trailingOnly=TRUE)
   if (length(x) %% 2L) stop("Use --key value pairs")
-  k <- sub("^--", "", x[seq.int(1L, length(x), by=2L)])
-  if (!length(x)) k <- character()
+  k <- if (length(x)) sub("^--", "", x[seq.int(1L, length(x), by=2L)]) else character()
   if (length(x) && any(!startsWith(x[seq.int(1L,length(x),by=2L)], "--"))) stop("Invalid argument name")
   if (anyDuplicated(k) || any(!k %in% c(required,names(defaults)))) stop("Duplicate or unknown argument")
   z <- defaults
