@@ -19,6 +19,22 @@ rule all:
     input:
         [RUN, REPORT] + ([ATTACH["output_dir"]] if DO_ATTACH else [])
 
+# Optional upstream adapter. Existing evidence-only execution is unchanged.
+if "a10" in A11:
+    if not isinstance(A11["a10"], str) or not A11["a10"].strip():
+        raise ValueError("a11.a10 must be a nonempty A10 file path")
+    if Path(A11["a10"]).resolve() == Path(A11["evidence"]).resolve():
+        raise ValueError("A10 input and A11 evidence output must differ")
+
+    rule a11_build_evidence:
+        input:
+            a10=A11["a10"],
+            script=str(WF / "scripts" / "make_a11_input.R")
+        output:
+            evidence=A11["evidence"]
+        shell:
+            "Rscript --vanilla {input.script:q} {input.a10:q} {output.evidence:q}"
+
 rule a11_dependence_sensitivity:
     input:
         evidence=A11["evidence"],

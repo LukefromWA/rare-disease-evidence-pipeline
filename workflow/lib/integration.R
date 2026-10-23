@@ -92,6 +92,7 @@ aggregate_ranked_candidates <- function(sl, freq) {
   g <- d[!is.na(gene_symbol), .SD[1L], by = gene_symbol]; g[, n_shortlist_variants := d[!is.na(gene_symbol), .N, by = gene_symbol][match(g$gene_symbol, gene_symbol), N]]
   g[, gene_priority_rank := frank(-posterior_informed, ties.method = "first")]
   out <- g[, .(gene_priority_rank, gene_symbol, best_candidate_id = candidate_id, n_shortlist_variants, best_integrated_score = S_bar_informed,
+               best_genomic_score = genomic,
                best_HPO_semantic_score = hpo_lin_bma_pct, best_PPI_network_score = string_informed_pct, best_multiplex_score = multiplex_informed_pct,
                best_GQ = GQ, best_MAX_AF = MAX_AF, best_VAF = VAF, best_DP = DP, best_AD_alt = AD_alt, best_IMPACT = IMPACT, best_consequence = consequence,
                posterior_informed, posterior_agnostic, rank_informed, rank_agnostic, n_views, coverage_class, rank_stability_class, review_tier,
