@@ -2,7 +2,7 @@
 .sf <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1]); source(file.path(dirname(normalizePath(.sf)), "..", "lib", "bootstrap.R"))
 # A1: evidence matrix from the A0 handoff VCF
 a <- parse_args(c("config", "sample", "vcf", "outdir")); cfg <- read_config(a$config)
-r <- build_evidence_matrix(a$vcf, cfg$qc, sample_id = cfg$vcf$sample_id, af_fields = unlist(cfg$qc$af_policy$fields), require_format = unlist(cfg$vcf$required_format_fields))
+r <- build_evidence_matrix(a$vcf, cfg$qc, sample_id = cfg$vcf$sample_id, sample_index = cfg$vcf$sample_index, af_fields = unlist(cfg$qc$af_policy$fields), require_format = unlist(cfg$vcf$required_format_fields))
 em <- r$matrix; od <- a$outdir; dir.create(od, recursive = TRUE, showWarnings = FALSE)
 qs <- rbind(data.table(metric = c("n_vcf_records", "n_candidates", "n_pass_core_qc", "n_missing_af"), value = c(r$n_vcf_records, nrow(em), sum(em$pass_core_qc), sum(is.na(em$MAX_AF)))),
             em[, .(metric = paste0("n_fail_", c("filter", "dp", "gq", "ad", "af", "impact")), value = c(sum(!pass_filter), sum(!pass_dp), sum(!pass_gq), sum(!pass_ad), sum(!pass_af), sum(!pass_impact)))])

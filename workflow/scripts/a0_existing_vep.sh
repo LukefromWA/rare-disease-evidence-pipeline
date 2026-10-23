@@ -13,7 +13,7 @@ gzip -t "$VCF" || fail "VCF is not valid gzip: $VCF"
 HEADER="$(gzip -cd "$VCF" | grep '^#' | head -n 100000)"
 grep -q '^##INFO=<ID=CSQ' <<<"$HEADER" || fail "no CSQ INFO header (not VEP-annotated)"
 CHROMLINE="$(grep '^#CHROM' <<<"$HEADER")"
-grep -qw "$SAMPLE" <<<"$CHROMLINE" || echo "A0 note: sample id '$SAMPLE' is not a column name; A1 will use the configured sample index" >&2
+grep -qw "$SAMPLE" <<<"$CHROMLINE" || echo "A0 note: pipeline sample label is not a VCF column name; A1 validates vcf.sample_id or vcf.sample_index." >&2
 mkdir -p "$OUT"
 cp -f "$VCF" "$OUT/annotated.biallelic.vcf.gz"; cp -f "$TBI" "$OUT/annotated.biallelic.vcf.gz.tbi"
 cmp -s "$VCF" "$OUT/annotated.biallelic.vcf.gz" || fail "staged copy differs from source"

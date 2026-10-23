@@ -1,0 +1,28 @@
+#!/usr/bin/env Rscript
+# Synthetic sample-selection regression tests; no case data or analysis run.
+.sf <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])
+source(file.path(dirname(normalizePath(.sf)), "..", "lib", "csq.R"))
+fixed <- c("CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT")
+single <- c(fixed, "SYNTHETIC_A")
+multi <- c(single, "SYNTHETIC_B")
+must_error <- function(expr) {
+  failed <- tryCatch({ force(expr); FALSE }, error = function(e) TRUE)
+  stopifnot(failed)
+}
+stopifnot(identical(select_vcf_sample_column(single), "SYNTHETIC_A"))
+stopifnot(identical(select_vcf_sample_column(multi, sample_id = "SYNTHETIC_B"), "SYNTHETIC_B"))
+stopifnot(identical(select_vcf_sample_column(multi, sample_index = 2L), "SYNTHETIC_B"))
+stopifnot(identical(select_vcf_sample_column(multi, sample_index = 1L), "SYNTHETIC_A"))
+must_error(select_vcf_sample_column(multi))
+must_error(select_vcf_sample_column(multi, sample_id = "MISSING_SYNTHETIC", sample_index = 1L))
+must_error(select_vcf_sample_column(single, sample_id = "MISSING_SYNTHETIC"))
+must_error(select_vcf_sample_column(multi, sample_id = "FORMAT"))
+must_error(select_vcf_sample_column(multi, sample_id = ""))
+must_error(select_vcf_sample_column(multi, sample_id = NA_character_))
+must_error(select_vcf_sample_column(multi, sample_id = c("SYNTHETIC_A", "SYNTHETIC_B")))
+for (bad in list(0, 3, 1.5, NA_real_, Inf, "1", TRUE, c(1L, 2L)))
+  must_error(select_vcf_sample_column(multi, sample_index = bad))
+must_error(select_vcf_sample_column(fixed))
+must_error(select_vcf_sample_column(c(single, "SYNTHETIC_A")))
+must_error(select_vcf_sample_column(c(fixed, "")))
+cat("VCF sample-selection regression tests passed.\n")

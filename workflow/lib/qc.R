@@ -1,7 +1,7 @@
 # workflow/lib/qc.R -- the single QC definition (A1/A2), exclusion reasons, shortlist lanes, genomic channel
 suppressPackageStartupMessages(library(data.table))
 
-# Every flag is kept. dp_rule "gt" = DP > min_dp (reproduces the recorded 908); "ge" = DP >= min_dp (sensitivity only). Returns a COPY.
+# Every flag is kept. dp_rule "gt" uses DP > min_dp; "ge" uses DP >= min_dp for sensitivity analysis. Returns a COPY.
 apply_core_qc <- function(dt, qc) {
   dt <- data.table::copy(data.table::as.data.table(dt))
   assert_columns(dt, c("candidate_id", "FILTER", "DP", "GQ", "AD_ref", "AD_alt", "MAX_AF", "IMPACT"), "QC input")

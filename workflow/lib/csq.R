@@ -63,12 +63,37 @@ max_af_from_csq <- function(rep_dt, schema, fields = NULL) {
        source = apply(m, 1, function(r) if (all(is.na(r))) NA_character_ else af_cols[which.max(ifelse(is.na(r), -Inf, r))]), cols = af_cols)
 }
 
+# Explicit IDs never fall back to a different sample. Indices are 1-based among sample columns.
+select_vcf_sample_column <- function(column_names, sample_id = NULL, sample_index = NULL) {
+  if (!is.character(column_names) || length(column_names) < 10L)
+    stop("VCF has no sample columns.", call. = FALSE)
+  samples <- column_names[seq.int(10L, length(column_names))]
+  if (anyNA(samples) || any(!nzchar(trimws(samples))) || anyDuplicated(samples) > 0L)
+    stop("VCF sample column names must be unique and nonblank.", call. = FALSE)
+  if (!is.null(sample_id)) {
+    if (!is.character(sample_id) || length(sample_id) != 1L || is.na(sample_id) || !nzchar(trimws(sample_id)))
+      stop("vcf.sample_id must be one nonblank string or null.", call. = FALSE)
+    if (!sample_id %in% samples)
+      stop("Configured vcf.sample_id was not found among VCF sample columns; no fallback performed.", call. = FALSE)
+    return(sample_id)
+  }
+  if (is.null(sample_index)) {
+    if (length(samples) == 1L) return(samples[[1L]])
+    stop("Multisample VCF requires vcf.sample_id or vcf.sample_index.", call. = FALSE)
+  }
+  if (!is.numeric(sample_index) || length(sample_index) != 1L || is.na(sample_index) ||
+      !is.finite(sample_index) || sample_index != floor(sample_index) ||
+      sample_index < 1 || sample_index > length(samples))
+    stop("vcf.sample_index must be a valid 1-based integer sample index.", call. = FALSE)
+  samples[[as.integer(sample_index)]]
+}
+
 # A1 -- evidence matrix from the A0 handoff VCF (biallelic, VEP-annotated)
-build_evidence_matrix <- function(vcf, qc, sample_id = NULL, sample_index = 1L, af_fields = NULL, require_format = c("GT", "DP", "GQ", "AD")) {
+build_evidence_matrix <- function(vcf, qc, sample_id = NULL, sample_index = NULL, af_fields = NULL, require_format = c("GT", "DP", "GQ", "AD")) {
   hdr <- read_vcf_header(vcf); schema <- csq_schema_from_header(hdr); rec <- read_vcf_records(vcf)
   need_cols(rec, c("CHROM", "POS", "REF", "ALT", "FILTER", "INFO", "FORMAT"), "VCF records")
   if (any(grepl(",", rec$ALT, fixed = TRUE))) stop("multi-allelic ALT present: A0 must hand off a biallelic VCF", call. = FALSE)
-  samp_col <- if (!is.null(sample_id) && sample_id %in% names(rec)) sample_id else names(rec)[9L + sample_index]
+  samp_col <- select_vcf_sample_column(names(rec), sample_id, sample_index)
   rec[, candidate_id := make_candidate_id(CHROM, POS, REF, ALT)]; if (anyDuplicated(rec$candidate_id)) stop("duplicate candidate ids in VCF", call. = FALSE)
   keys_present <- unique(unlist(strsplit(rec$FORMAT, ":", fixed = TRUE))); miss <- setdiff(require_format, keys_present)
   if (length(miss)) stop("required FORMAT field(s) absent: ", paste(miss, collapse = ", "), call. = FALSE)
