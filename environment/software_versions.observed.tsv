@@ -1,0 +1,25 @@
+software	version	scope	status	record_source	citation_or_project_url
+R	4.3.3	no-training R launcher	observed_by_participant	terminal citation/version probe	https://www.R-project.org/
+data.table	1.14.10	no-training R launcher	observed_by_participant	terminal citation/version probe	https://cran.r-project.org/package=data.table
+yaml	2.3.8	no-training R launcher	observed_by_participant	terminal citation/version probe	https://cran.r-project.org/package=yaml
+jsonlite	1.8.8	no-training R launcher	observed_by_participant	terminal citation/version probe	https://cran.r-project.org/package=jsonlite
+digest	0.6.34	no-training R launcher	observed_by_participant	terminal citation/version probe	https://cran.r-project.org/package=digest
+igraph	1.6.0	no-training R launcher	observed_by_participant	terminal citation/version probe	https://cran.r-project.org/package=igraph
+Matrix	1.6.5	no-training R launcher	observed_by_participant	terminal citation/version probe	https://cran.r-project.org/package=Matrix
+renv	1.0.3	no-training R launcher	observed_by_participant	terminal citation/version probe	https://cran.r-project.org/package=renv
+Python	3.14.8	Snakemake Python environment	observed_by_participant_not_proof_of_direct_use	terminal Python package probe	https://www.python.org/
+snakemake	9.27.1	Snakemake Python environment	observed_by_participant_not_proof_of_direct_use	terminal Python package probe	https://snakemake.readthedocs.io/
+PyYAML	6.0.3	Snakemake Python environment	observed_by_participant_not_proof_of_direct_use	terminal Python package probe	https://pypi.org/project/PyYAML/
+requests	2.34.2	Snakemake Python environment	observed_by_participant_not_proof_of_direct_use	terminal Python package probe	https://pypi.org/project/requests/
+bash	5.2.21(1)-release	current CLI PATH	observed_by_participant	terminal CLI version probe	https://www.gnu.org/software/bash/
+git	2.43.0	current CLI PATH	observed_by_participant	terminal CLI version probe	https://git-scm.com/
+gzip	1.12	current CLI PATH	observed_by_participant	terminal CLI version probe	https://www.gnu.org/software/gzip/
+curl	8.5.0	current CLI PATH	observed_by_participant	terminal CLI version probe	https://curl.se/
+bcftools	1.19	current CLI PATH	observed_by_participant	terminal CLI version probe	https://www.htslib.org/
+tabix	1.19	current CLI PATH	observed_by_participant	terminal CLI version probe	https://www.htslib.org/
+bgzip	1.19	current CLI PATH	observed_by_participant	terminal CLI version probe	https://www.htslib.org/
+sha256sum	9.4	current CLI PATH	observed_by_participant	terminal CLI version probe	https://www.gnu.org/software/coreutils/
+cmdstanr		no-training R launcher	unverified_version	version unresolved by supplied probe; historical training version not established	https://mc-stan.org/cmdstanr/
+posterior		no-training R launcher	unverified_version	version unresolved by supplied probe; historical training version not established	https://mc-stan.org/posterior/
+CmdStan		historical training environment	unverified_version	not measured by supplied probe	https://mc-stan.org/
+VEP		annotation environment	unverified_version	not included in supplied CLI probe	https://useast.ensembl.org/info/docs/tools/vep/index.html

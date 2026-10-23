@@ -16,3 +16,9 @@
 !/workflow/scripts/make_a11_input.R
 !/workflow/scripts/run_a11.R
 !/workflow/scripts/attach_a11_multimodel.R
+
+# Reviewed citation documentation and path-free version observations only.
+!/docs/CITATIONS.md
+!/environment/
+/environment/*
+!/environment/software_versions.observed.tsv
