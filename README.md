@@ -1,7 +1,9 @@
 # Rare-Disease Evidence Pipeline
 
 I built this pipeline for the 2026 MVA Hackathon to connect rare-disease gene and variant prioritization with mechanism-led drug-repurposing research. It combines genomic evidence, phenotype similarity, network analysis, and externally trained Bayesian models using R, Python, Stan, and Snakemake.
+
 The workflow emphasizes interpretability: why a candidate ranks highly, which evidence is missing, and how rankings change under alternative assumptions. Case evidence, external model training, frozen inference, and downstream research hypotheses remain distinct, with provenance linking results to their inputs and methods. The connected readthrough extension adds transcript-context verification, genomic mapping, published RTDetective prediction lookups, and source-linked literature evidence while keeping computational predictions separate from demonstrated biological effects.
+
 ## Start here
 
 The project has two connected parts. Track 1 prepares and ranks candidate hypotheses. Track 2 examines their mechanisms and the evidence for possible drug-repurposing hypotheses. I retain the genomic, phenotype, network, and model-based evidence rather than treating their scores as interchangeable.
