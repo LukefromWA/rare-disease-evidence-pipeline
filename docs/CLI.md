@@ -417,12 +417,3 @@ A report with no eligible drugs is a valid screening outcome. Inspect coverage,
 holds, and exclusions rather than assuming that a final eligible-drug ranking
 must exist.
 
-## Privacy and intended use
-
-Keep populated configurations, phenotype snapshots, case-specific gene lists,
-historical case artifacts, model payloads, generated reports, and execution logs
-outside the public source repository unless explicitly reviewed and authorized
-for distribution.
-
-The CLI does not introduce model training, automatic safety approval, or a
-clinical recommendation. Outputs support computational research and human review.
