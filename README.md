@@ -1,4 +1,4 @@
-# External training — Bayesian model comparison
+# External training - Bayesian model comparison
 
 I trained four Stan specifications using an external public cohort and retained three cross-validation fits per specification. I use the three retained M3b components as an equal-weight frozen predictor for downstream inference.
 
