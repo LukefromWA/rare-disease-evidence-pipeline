@@ -286,9 +286,7 @@ def create_case_run(
         if not family.is_file():
             stop("family-history phenotype file is missing")
 
-    if track == "run":
-        if history is None:
-            stop("connected mode currently requires declared historical support")
+    if track == "run" and history is not None:
         history = normalize_path(history)
         manifest_path = history / "manifest.json"
         if not manifest_path.is_file():
@@ -325,7 +323,7 @@ def create_case_run(
     t2["model_view_sources"] = {}
     t2["label_review_overrides"] = {}
     t2["frozen_union_dirs"] = (
-        {sample_label: str(history)} if track == "run" else {}
+        {sample_label: str(history)} if track == "run" and history is not None else {}
     )
     if isinstance(t2.get("mechanism_search"), dict):
         t2["mechanism_search"]["context_genes"] = {}
@@ -422,13 +420,9 @@ def interactive_case(track, cores):
 
     history = None
     if track == "run":
-        print("\nThe current connected adapter requires historical comparison/protection input.")
-        if ask_yes_no("Do you have that support snapshot for this same case", False):
+        print("\nFresh connected analysis does not require historical case outputs.")
+        if ask_yes_no("Include verified historical support for this same case", False):
             history = ask_path("Historical union directory", kind="dir")
-        elif ask_yes_no("Prepare Track 1 only instead", False):
-            track = "track1"
-        else:
-            stop("connected configuration cancelled; no fake historical input will be created")
 
     default_out = Path.home() / "mva_runs" / (
         datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "_" + uuid.uuid4().hex[:8]

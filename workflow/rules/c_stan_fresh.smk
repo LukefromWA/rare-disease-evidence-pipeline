@@ -20,7 +20,7 @@ def _fresh_union_history(wc):
         "frozen_union_dirs", {}
     ).get(wc.sample)
     if not directory:
-        raise ValueError("Missing configured historical union for this sample")
+        return {}
     if not os.path.isabs(directory):
         directory = os.path.join(ROOT, directory)
 
@@ -102,9 +102,9 @@ rule c4_fresh_stan_union:
         features=OUT + "/{sample}/c1/mva_feature_matrix.tsv.gz",
         predictions=OUT + "/{sample}/c3_stan_cv/stan_cv_predictions.rds",
         prediction_sha=OUT + "/{sample}/c3_stan_cv/stan_cv_predictions.rds.sha256",
-        history=lambda wc: _fresh_union_history(wc)["manifest"],
-        legacy_c4=lambda wc: _fresh_union_history(wc)["legacy_c4"],
-        legacy_a10=lambda wc: _fresh_union_history(wc)["legacy_a10"],
+        history=lambda wc: _fresh_union_history(wc).get("manifest", []),
+        legacy_c4=lambda wc: _fresh_union_history(wc).get("legacy_c4", []),
+        legacy_a10=lambda wc: _fresh_union_history(wc).get("legacy_a10", []),
         code=_UNION_CODE,
         helpers=_UNION_LIBS,
         config=CFG
@@ -120,7 +120,12 @@ rule c4_fresh_stan_union:
         contract=_UNION_OUT + "/HANDOFF_CONTRACT.txt",
         manifest=_UNION_OUT + "/manifest.json"
     params:
-        out=lambda wc: OUT + "/" + wc.sample + "/c4_stan_union"
+        out=lambda wc: OUT + "/" + wc.sample + "/c4_stan_union",
+        history_args=lambda wc: (
+            "--legacy_c4 " + __import__("shlex").quote(_fresh_union_history(wc)["legacy_c4"])
+            + " --legacy_a10 " + __import__("shlex").quote(_fresh_union_history(wc)["legacy_a10"])
+            + " --legacy_build GRCh38"
+        ) if _fresh_union_history(wc) else ""
     log:
         OUT + "/{sample}/logs/c4_stan_union.log"
     shell:
@@ -133,12 +138,10 @@ rule c4_fresh_stan_union:
           --sample {wildcards.sample:q} \
           --a10 {input.a10:q} \
           --a2 {input.a2:q} \
-          --legacy_c4 {input.legacy_c4:q} \
-          --legacy_a10 {input.legacy_a10:q} \
+          {params.history_args} \
           --features {input.features:q} \
           --predictions {input.predictions:q} \
           --current_build GRCh38 \
-          --legacy_build GRCh38 \
           --outdir "$stage/run" > {log:q} 2>&1
         test -s "$stage/run/manifest.json"
         for artifact in "$stage/run/"*; do

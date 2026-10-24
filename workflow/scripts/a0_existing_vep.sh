@@ -17,5 +17,5 @@ grep -qw "$SAMPLE" <<<"$CHROMLINE" || echo "A0 note: pipeline sample label is no
 mkdir -p "$OUT"
 cp -f "$VCF" "$OUT/annotated.biallelic.vcf.gz"; cp -f "$TBI" "$OUT/annotated.biallelic.vcf.gz.tbi"
 cmp -s "$VCF" "$OUT/annotated.biallelic.vcf.gz" || fail "staged copy differs from source"
-Rscript "$HERE/a0_manifest.R" --config "$CONFIG" --mode existing_vep --sample "$SAMPLE" --vcf "$OUT/annotated.biallelic.vcf.gz" \
+Rscript --vanilla "$HERE/a0_manifest.R" --config "$CONFIG" --mode existing_vep --sample "$SAMPLE" --vcf "$OUT/annotated.biallelic.vcf.gz" \
   --tbi "$OUT/annotated.biallelic.vcf.gz.tbi" --source_vcf "$VCF" --metadata "$META" --outdir "$OUT" --raw_vcf "${RAW:-NA}" --raw_tbi "${RAWTBI:-NA}"

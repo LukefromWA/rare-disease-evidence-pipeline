@@ -116,10 +116,28 @@ class InteractiveTests(unittest.TestCase):
             self.create(metadata=None)
         self.assertFalse((self.root / "new run").exists())
 
-    def test_connected_requires_history(self):
+    def test_connected_without_history(self):
+        config = self.create(track="run", history=None)
+        value = json.loads(config.read_text())
+        self.assertEqual(value["cli"]["selected_track"], "run")
+        self.assertEqual(value["track2"]["frozen_union_dirs"], {})
+        self.assertEqual(value["track2"]["label_review_overrides"], {})
+
+    def test_connected_rejects_missing_history_manifest(self):
         with self.assertRaises(SystemExit):
-            self.create(track="run", history=None)
+            self.create(track="run", history=self.root)
         self.assertFalse((self.root / "new run").exists())
+
+    def test_connected_preserves_declared_history(self):
+        history = self.root / "history"
+        history.mkdir()
+        (history / "manifest.json").write_text(json.dumps({
+            "version": "A10_C4_union_Stan_v1_2",
+            "current_build": "GRCh38", "legacy_build": "GRCh38",
+        }))
+        config = self.create(track="run", history=history)
+        value = json.loads(config.read_text())
+        self.assertEqual(value["track2"]["frozen_union_dirs"], {"SYNTHETIC_1": str(history)})
 
     def test_raw_configuration(self):
         fasta = self.root / "reference.fa"

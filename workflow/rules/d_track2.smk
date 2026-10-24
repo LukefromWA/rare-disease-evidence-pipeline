@@ -361,13 +361,10 @@ rule d2_label_evidence:
 
 # BEGIN d3_codon_context_v1
 def _t2_codon_variant_evidence(wc):
-    return (
-        config["track2"]["frozen_union_dirs"][wc.sample].rstrip("/")
-        + "/shortlisted_variant_evidence.tsv"
-    )
+    return OUT + "/" + wc.sample + "/c4_stan_union/shortlisted_variant_evidence.tsv"
 
 def _t2_codon_a10(wc):
-    return config["track2"]["model_view_sources"][wc.sample]["a10"]
+    return OUT + "/" + wc.sample + "/a10/ranked_candidates.tsv.gz"
 
 def _t2_codon_gene_args(wc):
     genes = config["track2"]["mechanism_search"]["context_genes"][wc.sample]
@@ -509,6 +506,39 @@ rule layer_d_readthrough_multiview:
         )
 # END d3_readthrough_multiview_v1
 
+# BEGIN fresh_codon_genomic_mapping_v2
+rule d3_codon_genomic_mapping:
+    input:
+        context=D + "/d3/codon_context/codon_context.tsv",
+        fasta=D + "/d3/codon_context/flanking_context.fasta",
+        manifest=D + "/d3/codon_context/manifest.json",
+        code=SCRIPTS + "/d3_codon_genomic_mapping.py"
+    output:
+        mapping=D + "/d3/codon_context/genomic_mapping/codon_genomic_mapping.tsv",
+        bed=D + "/d3/codon_context/genomic_mapping/stop_codon_lookup.bed",
+        manifest=D + "/d3/codon_context/genomic_mapping/manifest.json"
+    params:
+        context=lambda wc: OUT + "/" + wc.sample + "/d3/codon_context",
+        out=lambda wc: OUT + "/" + wc.sample + "/d3/codon_context/genomic_mapping",
+        cache=lambda wc: OUT + "/" + wc.sample + "/d3/codon_context/.genomic_mapping_request_cache_v2",
+        server=lambda wc: config.get("track2", {}).get("mechanism_search", {}).get("context_rest_server", "https://rest.ensembl.org"),
+        live=lambda wc: "--allow-live" if config.get("track2", {}).get("mechanism_search", {}).get("mapping_allow_live") is True else ""
+    log: D + "/logs/d3_codon_genomic_mapping.log"
+    shell:
+        r"""
+        mkdir -p $(dirname {log:q})
+        python3 -B {input.code:q} --context-dir {params.context:q} \
+          --outdir {params.out:q} --request-cache {params.cache:q} \
+          --server {params.server:q} {params.live} > {log:q} 2>&1
+        """
+
+rule layer_d_codon_genomic_mapping:
+    input:
+        expand(OUT + "/{sample}/d3/codon_context/genomic_mapping/codon_genomic_mapping.tsv", sample=SAMPLES),
+        expand(OUT + "/{sample}/d3/codon_context/genomic_mapping/stop_codon_lookup.bed", sample=SAMPLES),
+        expand(OUT + "/{sample}/d3/codon_context/genomic_mapping/manifest.json", sample=SAMPLES)
+# END fresh_codon_genomic_mapping_v2
+
 # BEGIN d3_readthrough_context_bridge_v1
 def _t2_readthrough_cached_context_inputs(wc):
     directory = OUT + "/" + wc.sample + "/d3/codon_context"
@@ -518,7 +548,7 @@ def _t2_readthrough_cached_context_inputs(wc):
         directory + "/genomic_mapping/codon_genomic_mapping.tsv",
         directory + "/genomic_mapping/manifest.json"
     ]
-    return [path for path in paths if os.path.isfile(path)]
+    return paths
 
 rule d3_readthrough_context_bridge:
     input:
@@ -592,26 +622,52 @@ def _t2_rtdetective_track_cache():
     )
 
 def _t2_rtdetective_adoption_cache_inputs(wc):
+    # Required producer outputs, not existing-file discovery.
     inventory = _t2_rtdetective_inventory()
     cache = _t2_rtdetective_track_cache()
     lookups = OUT + "/" + wc.sample + "/d3/rtdetective_lookup"
-    paths = [
-        inventory + "/article_metadata.json",
-        inventory + "/manifest.json"
-    ]
+    paths = [inventory + "/article_metadata.json", inventory + "/manifest.json"]
     for name in _t2_rtdetective_adoption_settings()["tracks"]:
         if name not in {"DAP_tga.txt", "Clitocine_tga.txt", "SRI_tga.txt"}:
             raise ValueError("Unsupported RTDetective adoption track")
         paths.append(cache + "/" + name)
         directory = os.path.join(lookups, os.path.splitext(name)[0])
-        if os.path.isdir(directory):
-            paths.extend(
-                os.path.join(directory, item)
-                for item in sorted(os.listdir(directory))
-                if item.endswith((".tsv", ".json"))
-                and os.path.isfile(os.path.join(directory, item))
-            )
-    return sorted(set(path for path in paths if os.path.isfile(path)))
+        paths.extend(os.path.join(directory, item) for item in
+                     ("lookup_status.tsv", "exact_matches.tsv", "manifest.json"))
+    return sorted(set(paths))
+
+# BEGIN rtdetective_fresh_coordinate_lookup_v1
+def _t2_rtdetective_lookup_track(wc):
+    if wc.rtd_track not in {"DAP_tga", "Clitocine_tga", "SRI_tga"}:
+        raise ValueError("Unsupported RTDetective track")
+    return _t2_rtdetective_track_cache() + "/" + wc.rtd_track + ".txt"
+
+rule d3_rtdetective_lookup:
+    input:
+        mapping=D + "/d3/codon_context/genomic_mapping/codon_genomic_mapping.tsv",
+        mapping_manifest=D + "/d3/codon_context/genomic_mapping/manifest.json",
+        metadata=lambda wc: _t2_rtdetective_inventory() + "/article_metadata.json",
+        inventory_manifest=lambda wc: _t2_rtdetective_inventory() + "/manifest.json",
+        track=_t2_rtdetective_lookup_track,
+        code=SCRIPTS + "/d3_rtdetective_lookup.py"
+    output:
+        status=D + "/d3/rtdetective_lookup/{rtd_track}/lookup_status.tsv",
+        exact=D + "/d3/rtdetective_lookup/{rtd_track}/exact_matches.tsv",
+        manifest=D + "/d3/rtdetective_lookup/{rtd_track}/manifest.json"
+    params:
+        inventory=lambda wc: _t2_rtdetective_inventory(),
+        out=lambda wc: OUT + "/" + wc.sample + "/d3/rtdetective_lookup/" + wc.rtd_track
+    wildcard_constraints:
+        rtd_track="DAP_tga|Clitocine_tga|SRI_tga"
+    log: D + "/logs/d3_rtdetective_lookup_{rtd_track}.log"
+    shell:
+        r"""
+        mkdir -p $(dirname {log:q})
+        python3 -B {input.code:q} --mapping-table {input.mapping:q} \
+          --mapping-manifest {input.mapping_manifest:q} --track {input.track:q} \
+          --inventory-dir {params.inventory:q} --outdir {params.out:q} > {log:q} 2>&1
+        """
+# END rtdetective_fresh_coordinate_lookup_v1
 
 rule d3_rtdetective_adopt:
     input:

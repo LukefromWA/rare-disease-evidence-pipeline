@@ -1,0 +1,23 @@
+# Overlay on an existing case run.yaml; replace every sample/gene/path placeholder.
+track2:
+  mechanism_search:
+    context_genes:
+      SAMPLE_1: [GENE_SYMBOL]
+    context_rest_server: https://rest.ensembl.org
+    context_flank: 15
+    context_allow_live: false
+    mapping_allow_live: false
+  rtdetective:
+    mode: auto
+    tracks: [DAP_tga.txt, Clitocine_tga.txt, SRI_tga.txt]
+    article_id: 23708901
+    article_version: 2
+    inventory_dir: /path/to/pinned/rtdetective_inventory
+    track_cache_dir: /path/to/rtdetective_tracks_v2
+  evidence_ledger:
+    fulltext_dirs:
+      SAMPLE_1: /path/to/saved/fulltext_bundle
+    bibliography_dirs:
+      SAMPLE_1: /path/to/saved/bibliography_bundle
+    claim_seeds: /path/to/curation/claim_seeds.v1.json
+    mechanistic_bundle: /path/to/primary_mechanistic_bundle

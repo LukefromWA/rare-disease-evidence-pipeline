@@ -58,3 +58,28 @@ rule track1:
             OUT + "/{sample}/a11_review/calculation/bayesian_dependence_sensitivity_ensemble_consensus.csv",
             sample=SAMPLES
         ) if config.get("frozen_stan", {}).get("enabled") is True else []
+
+# BEGIN full_extended_completion_v1
+_FULL_EXTENDED_ARTIFACTS = ['a10/ranked_candidates.tsv.gz', 'c4_stan_union/current_Stan_final_hypothesis_set.tsv', 'd7/final_report.tsv', 'd3/codon_context/codon_context.tsv', 'd3/codon_context/flanking_context.fasta', 'd3/codon_context/manifest.json', 'd3/codon_context/genomic_mapping/codon_genomic_mapping.tsv', 'd3/codon_context/genomic_mapping/stop_codon_lookup.bed', 'd3/codon_context/genomic_mapping/manifest.json', 'd3/readthrough_route/routing.tsv', 'd3/readthrough_route/manifest.json', 'd3/readthrough_route_multiview/routing.tsv', 'd3/readthrough_route_multiview/selection_witnesses.tsv', 'd3/readthrough_route_multiview/view_coverage.tsv', 'd3/readthrough_route_multiview/manifest.json', 'd3/readthrough_context_bridge/verification.tsv', 'd3/readthrough_context_bridge/context_requests.tsv', 'd3/readthrough_context_bridge/manifest.json', 'd3/rtdetective_adoption/predictions.tsv', 'd3/rtdetective_adoption/adoption_status.tsv', 'd3/rtdetective_adoption/manifest.json', 'd3/rtdetective_lookup/DAP_tga/lookup_status.tsv', 'd3/rtdetective_lookup/DAP_tga/exact_matches.tsv', 'd3/rtdetective_lookup/DAP_tga/manifest.json', 'd3/rtdetective_lookup/Clitocine_tga/lookup_status.tsv', 'd3/rtdetective_lookup/Clitocine_tga/exact_matches.tsv', 'd3/rtdetective_lookup/Clitocine_tga/manifest.json', 'd3/rtdetective_lookup/SRI_tga/lookup_status.tsv', 'd3/rtdetective_lookup/SRI_tga/exact_matches.tsv', 'd3/rtdetective_lookup/SRI_tga/manifest.json', 'd3/claim_ledger/sources.tsv', 'd3/claim_ledger/claims.tsv', 'd3/claim_ledger/claim_hypothesis_links.tsv', 'd3/claim_ledger/review_queue.tsv', 'd3/claim_ledger/used_references.ris', 'd3/claim_ledger/manifest.json', 'd3/claim_ledger_mechanistic/sources.tsv', 'd3/claim_ledger_mechanistic/source_snapshots.tsv', 'd3/claim_ledger_mechanistic/claims.tsv', 'd3/claim_ledger_mechanistic/claim_hypothesis_links.tsv', 'd3/claim_ledger_mechanistic/claim_source_links.tsv', 'd3/claim_ledger_mechanistic/review_queue.tsv', 'd3/claim_ledger_mechanistic/source_review_queue.tsv', 'd3/claim_ledger_mechanistic/used_references.ris', 'd3/claim_ledger_mechanistic/manifest.json']
+
+rule audit_full_extended:
+    input:
+        artifacts=lambda wc: [OUT + "/" + wc.sample + "/" + name for name in _FULL_EXTENDED_ARTIFACTS],
+        ready=RES + "/.ready",
+        code=SCRIPTS + "/audit_full_extended.py"
+    output:
+        audit=OUT + "/{sample}/extended/run_audit.json"
+    params:
+        case=lambda wc: OUT + "/" + wc.sample
+    log: OUT + "/{sample}/logs/full_extended_audit.log"
+    shell:
+        r"""
+        mkdir -p $(dirname {log:q})
+        python3 -B {input.code:q} --case-dir {params.case:q} --out {output.audit:q} > {log:q} 2>&1
+        """
+
+rule full_extended:
+    input:
+        rules.all.input,
+        expand(OUT + "/{sample}/extended/run_audit.json", sample=SAMPLES)
+# END full_extended_completion_v1

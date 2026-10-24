@@ -63,3 +63,13 @@
 
 # Reviewed interactive CLI tests.
 !/tests/test_cli_interactive.py
+
+# Explicitly publish reviewed extended workflow source, tests and documentation.
+!/workflow/scripts/d3_codon_genomic_mapping.py
+!/workflow/scripts/test_codon_genomic_mapping.py
+!/workflow/scripts/d3_rtdetective_lookup.py
+!/workflow/scripts/test_rtdetective_lookup.py
+!/workflow/scripts/audit_full_extended.py
+!/workflow/scripts/test_full_extended_audit.py
+!/docs/full_extended.md
+!/config/full_extended.example.yaml

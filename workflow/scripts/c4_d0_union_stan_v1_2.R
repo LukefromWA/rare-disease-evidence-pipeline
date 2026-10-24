@@ -2,7 +2,13 @@
 # Install in written_final_scripts/workflow/scripts beside c4_hypotheses.R.
 .sf <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])
 source(file.path(dirname(normalizePath(.sf)), "..", "lib", "bootstrap.R"))
-a <- parse_args(c("config", "sample", "a10", "a2", "legacy_c4", "features", "predictions", "outdir", "current_build", "legacy_build", "legacy_a10"))
+a <- parse_args(
+  c("config", "sample", "a10", "a2", "features", "predictions", "outdir", "current_build"),
+  optional = c("legacy_c4", "legacy_a10", "legacy_build")
+)
+history_args <- c("legacy_c4", "legacy_a10", "legacy_build")
+has_history <- all(history_args %in% names(a))
+if (any(history_args %in% names(a)) && !has_history) stop("Historical mode requires legacy_c4, legacy_a10 and legacy_build together")
 for (pkg in c("data.table", "digest", "jsonlite")) if (!requireNamespace(pkg, quietly = TRUE)) stop("Required package: ", pkg)
 suppressPackageStartupMessages(library(data.table))
 sha <- function(p) digest::digest(file = p, algo = "sha256")
@@ -20,7 +26,10 @@ if (!file.exists(h) || !identical(trimws(readLines(h, n = 1L)), sha(a$prediction
 cfg <- read_config(a$config)
 x <- read_tab(a$a10)
 a2 <- read_tab(a$a2)
-old <- read_tab(a$legacy_c4)
+old <- if (has_history) read_tab(a$legacy_c4) else data.table(
+  gene = character(), variant = character(), q_j = character(),
+  mechanism = character(), p_m = character()
+)
 f <- read_tab(a$features)
 pred <- readRDS(a$predictions)
 s <- as.data.table(copy(pred$summary))
@@ -33,13 +42,17 @@ if (is.null(pred$predictor_id) || !nzchar(pred$predictor_id)) stop("Prediction a
 if (anyDuplicated(x$gene_symbol) || anyDuplicated(x$best_candidate_id) || any(blank(x$gene_symbol)) || any(blank(x$best_candidate_id))) stop("A10 keys must be unique and nonblank")
 if (anyDuplicated(a2$candidate_id) || anyDuplicated(f$candidate_id) || anyDuplicated(s$candidate_id)) stop("Duplicate allele/representative IDs; inspect before joining")
 # v1.1: explicit assembly declaration, key reconciliation, and audited historical repair.
-if (!identical(a$current_build, "GRCh38") || !identical(a$legacy_build, "GRCh38")) {
+if (!identical(a$current_build, "GRCh38") || (has_history && !identical(a$legacy_build, "GRCh38"))) {
   stop("This adapter supports explicitly declared GRCh38 inputs only; no liftover is performed")
 }
-if (!file.exists(a$legacy_a10)) stop("Missing historical A10: ", a$legacy_a10)
-input_paths <- c(input_paths, legacy_a10 = a$legacy_a10)
-input_hashes <- c(input_hashes, legacy_a10 = sha(a$legacy_a10))
-legacy_a10 <- read_tab(a$legacy_a10)
+if (has_history) {
+  if (!file.exists(a$legacy_a10)) stop("Missing historical A10: ", a$legacy_a10)
+  input_paths <- c(input_paths, legacy_a10 = a$legacy_a10)
+  input_hashes <- c(input_hashes, legacy_a10 = sha(a$legacy_a10))
+  legacy_a10 <- read_tab(a$legacy_a10)
+} else {
+  legacy_a10 <- data.table(gene_symbol = character(), best_candidate_id = character())
+}
 need(legacy_a10, c("gene_symbol", "best_candidate_id"), "Historical A10")
 canonical_id <- function(values) {
   vapply(as.character(values), function(z) {
@@ -95,7 +108,7 @@ if (nrow(old_unresolved)) {
   old_unresolved[, unresolved_reason := fifelse(blank(gene), "no_unique_historical_A10_gene_mapping", "missing_variant_key")]
 }
 old <- copy(old[!blank(gene) & !is.na(variant)])
-if (!nrow(old)) stop("No identifiable historical C4 hypotheses remain")
+if (has_history && !nrow(old)) stop("No identifiable historical C4 hypotheses remain")
 if (nrow(old) + nrow(old_unresolved) != nrow(old_all)) stop("Historical row accounting failed")
 if (!nrow(x) || !nrow(s)) stop("Empty current candidate set")
 if (uniqueN(f$case_id) != 1L || uniqueN(s$case_id) != 1L || !identical(unique(f$case_id), as.character(unique(s$case_id)))) stop("C1/Stan case mismatch")
@@ -169,8 +182,8 @@ paths <- c(registry = "candidate_registry.tsv", variants = "shortlisted_variant_
 tables <- list(reg, links, primary, fh, sc, explore, old_keep, old_unresolved)
 for (i in seq_along(paths)) fwrite(tables[[i]], file.path(a$outdir, paths[i]), sep = "\t", na = "")
 contract <- c(
-  "Candidate registry = A10 UNION identifiable historical C4; unresolved historical rows retained separately.",
-  "GRCh38 explicitly declared for both sources. Format reconciliation only; no liftover, reference validation, or indel realignment.",
+  if (has_history) "Candidate registry = A10 UNION identifiable historical C4; unresolved historical rows retained separately." else "Fresh-only candidate registry = all current A10/C1/Stan hypotheses; no historical case inputs used.",
+  if (has_history) "GRCh38 explicitly declared for both sources. Format reconciliation only; no liftover, reference validation, or indel realignment." else "Current GRCh38 explicitly declared. Format reconciliation only; no historical assembly declaration or historical source is implied.",
   "Original allele identifiers are preserved. Historical missing genes are recovered only from unique historical A10 allele matches.",
   "All A10 candidates retained; no probability or top-k pruning.",
   "Primary weights are unchanged current Stan CV probabilities, not a new blended posterior.",
@@ -186,7 +199,7 @@ contract <- c(
   "Unweighted exploration must be reported separately from probability-weighted aggregation."
 )
 writeLines(contract, file.path(a$outdir, "HANDOFF_CONTRACT.txt"))
-manifest <- list(version = "A10_C4_union_Stan_v1_2", current_build = a$current_build, legacy_build = a$legacy_build, historical_rows_total = nrow(old_all), historical_rows_gene_repaired = length(repair), historical_rows_unresolved = nrow(old_unresolved), historical_unresolved_unique_variants = uniqueN(old_unresolved$variant), timestamp_utc = format(Sys.time(), tz = "UTC", usetz = TRUE), sample_label = a$sample,
+manifest <- list(history_included = has_history, handoff_mode = if (has_history) "current_with_historical_support" else "fresh_only", version = "A10_C4_union_Stan_v1_2", current_build = a$current_build, legacy_build = a$legacy_build, historical_rows_total = nrow(old_all), historical_rows_gene_repaired = length(repair), historical_rows_unresolved = nrow(old_unresolved), historical_unresolved_unique_variants = uniqueN(old_unresolved$variant), timestamp_utc = format(Sys.time(), tz = "UTC", usetz = TRUE), sample_label = a$sample,
  inputs = lapply(seq_along(input_paths), function(i) list(role = names(input_paths)[i], path = normalizePath(input_paths[i]), sha256 = unname(input_hashes[i]))),
  outputs = lapply(paths, function(p) list(path = p, sha256 = sha(file.path(a$outdir, p)))),
  counts = list(A10 = nrow(x), historical_C4_hypotheses = nrow(old_keys), union = nrow(reg), primary_current_Stan = nrow(primary), protected_unscored = nrow(explore), shortlisted_evidence_rows = nrow(links), primary_scenarios = nrow(sc)),
