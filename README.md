@@ -162,9 +162,9 @@ flowchart TD
 
 The union combines candidate registries, not their scores:
 
-\[
+$$
 \mathcal H_{\mathrm{Track\ 2}}=\mathcal H_A\cup\mathcal H_C.
-\]
+$$
 
 I align candidate identifiers and retain source membership, genomic evidence, coverage, and separate A/C scores. A-only candidates should not disappear because C lacks a prediction, and different score types should not be treated as equivalent. The diagram summarizes the analysis rather than showing every resource dependency.
 
@@ -178,10 +178,10 @@ Retain individual QC flags and exclusion reasons. Thresholds belong in configura
 
 For allele-fraction analysis, use informative allelic depth consistently:
 
-\[
+$$
 n_i=AD_{\mathrm{ref},i}+AD_{\mathrm{alt},i},\qquad
 \widehat f_i=\frac{AD_{\mathrm{alt},i}}{n_i},\quad n_i>0.
-\]
+$$
 
 Total depth and informative allelic depth need not be identical. Missing annotation or population-frequency information must remain distinguishable from an observed negative result.
 
@@ -191,23 +191,23 @@ Total depth and informative allelic depth need not be identical. Missing annotat
 
 Compare the case's observed phenotype terms with gene-associated term sets using a declared ontology and annotation snapshot. Information content gives rarer terms greater specificity:
 
-\[
+$$
 IC(t)=-\log\frac{n_t}{N},\qquad
 s_{\mathrm{Lin}}(a,b)=\frac{2IC(\mathrm{MICA}(a,b))}{IC(a)+IC(b)}.
-\]
+$$
 
-Here, \(n_t\) counts annotated entities associated with a term or its descendants in the declared universe. MICA is the most informative common ancestor. Edge cases, such as a zero denominator, need an explicit implementation convention.
+Here, $n_t$ counts annotated entities associated with a term or its descendants in the declared universe. MICA is the most informative common ancestor. Edge cases, such as a zero denominator, need an explicit implementation convention.
 
 Aggregate term similarities with symmetric best-match average:
 
-\[
+$$
 \mathrm{BMA}(P,G)=\frac12\left[
 \frac1{|P|}\sum_{a\in P}\max_{b\in G}s(a,b)
 +\frac1{|G|}\sum_{b\in G}\max_{a\in P}s(a,b)
 \right].
-\]
+$$
 
-Here, \(P\) is the observed case-term set and \(G\) is the gene annotation set. Resnik, depth-based Wu–Palmer, and ancestor-set Jaccard provide complementary views, not independent confirmations. Missing gene annotations are unscorable coverage, not evidence against a gene.
+Here, $P$ is the observed case-term set and $G$ is the gene annotation set. Resnik, depth-based Wu–Palmer, and ancestor-set Jaccard provide complementary views, not independent confirmations. Missing gene annotations are unscorable coverage, not evidence against a gene.
 
 **Output:** gene-level similarity views, ranks, annotation coverage, and resource provenance.
 
@@ -215,22 +215,22 @@ Here, \(P\) is the observed case-term set and \(G\) is the gene annotation set. 
 
 Use phenotype-derived seeds and, in a separately labeled informed view, a declared prior gene panel. Keep the agnostic view free of that panel. A currently top-ranked candidate must not become an undeclared prior seed.
 
-For a column-normalized transition matrix \(P\), seed distribution \(s\), restart probability \(r\), and dangling-column indicator \(d\), the build-guide update is:
+For a column-normalized transition matrix $P$, seed distribution $s$, restart probability $r$, and dangling-column indicator $d$, the build-guide update is:
 
-\[
+$$
 p_{t+1}=r s+(1-r)\left(Pp_t+s\,d^{\mathsf T}p_t\right).
-\]
+$$
 
-The dangling mass returns to the seed distribution. This equation uses \(r\) as restart probability, not damping probability. Record the graph, seed policy, and implementation used by each run; corrections must not silently replace historical outputs.
+The dangling mass returns to the seed distribution. This equation uses $r$ as restart probability, not damping probability. Record the graph, seed policy, and implementation used by each run; corrections must not silently replace historical outputs.
 
 A multiplex view connects network layers while keeping their identities available for comparison. For two layers, one possible declared transition structure is:
 
-\[
+$$
 T=\begin{pmatrix}
 (1-\lambda)P_1&\lambda I\\
 \lambda I&(1-\lambda)P_2
 \end{pmatrix}.
-\]
+$$
 
 Normalization, common node ordering, and dangling handling must be checked. If no valid seeds remain, return an unavailable channel rather than a fabricated zero score.
 
@@ -240,52 +240,52 @@ Normalization, common node ordering, and dangling handling must be checked. If n
 
 Align genomic, phenotype, and network evidence by candidate identity. Agreement statistics describe relationships between views; an integrated rank is not an independent input view.
 
-For channel score \(s_{ik}\), declared weight \(w_k\), and availability indicator \(M_{ik}\), the available-channel mean is:
+For channel score $s_{ik}$, declared weight $w_k$, and availability indicator $M_{ik}$, the available-channel mean is:
 
-\[
+$$
 \overline S_i=\frac{\sum_k w_k M_{ik}s_{ik}}{\sum_k w_k M_{ik}},
 \qquad n_{\mathrm{views},i}=\sum_k M_{ik}.
-\]
+$$
 
 The score is undefined when the denominator is zero. Missing evidence is not replaced with biological negative evidence. Score transformations and percentile universes must be documented before combination.
 
 A declared prior-weighted normalization may then be written:
 
-\[
+$$
 Q_i=\frac{\alpha_i L_i}{\sum_j\alpha_j L_j}.
-\]
+$$
 
-The meaning of \(L_i\) must be stated: a transformed evidence score is not automatically a calibrated likelihood. Report informed and agnostic versions separately. Normalization alone does not make \(Q_i\) a clinical posterior probability.
+The meaning of $L_i$ must be stated: a transformed evidence score is not automatically a calibrated likelihood. Report informed and agnostic versions separately. Normalization alone does not make $Q_i$ a clinical posterior probability.
 
 ### Dependence and channel attribution
 
 The dependence analysis examines whether phenotype and network evidence overlap. A rank-based Gaussian transform on paired available observations gives:
 
-\[
+$$
 z_i=\Phi^{-1}\left(\frac{\mathrm{rank}(s_i)}{n+1}\right),
 \qquad \widehat\rho=\mathrm{cor}(z^{(H)},z^{(N)}).
-\]
+$$
 
 Declare tie handling and the complete-case sample size. A modest correlation does not prove independence or validate a chosen copula.
 
-Exact Shapley attribution describes each channel's contribution to a declared scoring function \(v\) over the available evidence channels \(K\):
+Exact Shapley attribution describes each channel's contribution to a declared scoring function $v$ over the available evidence channels $K$:
 
-\[
+$$
 \phi_k=\sum_{S\subseteq K\setminus\{k\}}
 \frac{|S|!(|K|-|S|-1)!}{|K|!}
 \left[v(S\cup\{k\})-v(S)\right].
-\]
+$$
 
-Specify the empty-set and missing-data conventions, and check that contributions sum to \(v(K)-v(\varnothing)\). Attribution explains the score function; it does not establish biological causality.
+Specify the empty-set and missing-data conventions, and check that contributions sum to $v(K)-v(\varnothing)$. Attribution explains the score function; it does not establish biological causality.
 
 ### A8: Allele-fraction and mosaicism review
 
-With prior \(\mathrm{Beta}(a_0,b_0)\) and informative counts:
+With prior $\mathrm{Beta}(a_0,b_0)$ and informative counts:
 
-\[
+$$
 f_i\mid\mathrm{counts}\sim
 \mathrm{Beta}(a_0+AD_{\mathrm{alt},i},b_0+AD_{\mathrm{ref},i}).
-\]
+$$
 
 Report credible intervals and read-level/QC qualifications. A beta-binomial versus fixed heterozygous-binomial comparison is a model comparison, not proof of mosaicism. A low fraction alone does not identify its biological cause.
 
@@ -297,18 +297,18 @@ Join coverage, allele-fraction review, informed/agnostic rankings, and robustnes
 
 ## A11 — Ranking sensitivity under declared assumptions
 
-A11 keeps sensitivity results separate from the original evidence scores. Perturb declared weights or assumptions, rerank, and record how often each candidate remains in the top \(m\):
+A11 keeps sensitivity results separate from the original evidence scores. Perturb declared weights or assumptions, rerank, and record how often each candidate remains in the top $m$:
 
-\[
+$$
 \widehat\pi_i^{(m)}=\frac1B\sum_{b=1}^{B}
 \mathbf 1\{\mathrm{rank}_b(i)\le m\}.
-\]
+$$
 
-For two top-\(m\) sets with overlap \(r\) from \(n\) candidates, the Kuncheva index is:
+For two top-$m$ sets with overlap $r$ from $n$ candidates, the Kuncheva index is:
 
-\[
+$$
 KI=\frac{rn-m^2}{m(n-m)},\qquad 0<m<n.
-\]
+$$
 
 Leave-one-channel-out comparisons measure score and rank changes. Record the perturbation distribution, seed, candidate universe, and tie rules. These frequencies describe robustness to the chosen perturbations, not the probability that a candidate is causal.
 
@@ -336,70 +336,70 @@ For any held-out partition, require disjoint case and duplicate-group identities
 
 The guide's gene-frequency feature excludes the training case's own label contribution:
 
-\[
+$$
 G_{gc}=\log\left(1+\sum_{c'\in\mathcal T,\,c'\ne c}
 \mathbf 1\{\mathrm{causal}(c')=g\}\right).
-\]
+$$
 
-Phenotype-overlap, network, and interaction features must follow their recorded definitions. A gene-frequency feature is not a raw genomic-evidence channel. Stan accepts \(X\) as input; the feature meanings are supplied by the matching preprocessing schema, not inferred from model names.
+Phenotype-overlap, network, and interaction features must follow their recorded definitions. A gene-frequency feature is not a raw genomic-evidence channel. Stan accepts $X$ as input; the feature meanings are supplied by the matching preprocessing schema, not inferred from model names.
 
 ### B11–B13: Four Stan specifications
 
-Each training case has one labeled candidate position within its supplied candidate set \(I_c\). All four models use the same conditional categorical-logit likelihood:
+Each training case has one labeled candidate position within its supplied candidate set $I_c$. All four models use the same conditional categorical-logit likelihood:
 
-\[
+$$
 p_{ci}(\theta)=\frac{\exp(\eta_i)}{\sum_{j\in I_c}\exp(\eta_j)},
 \qquad
 \log L(\theta)=\sum_c\left[\eta_{y_c}-\log\sum_{j\in I_c}e^{\eta_j}\right].
-\]
+$$
 
 Stan's `y_pos` is the local position within a contiguous case segment. These probabilities depend on which candidates were supplied; they are not clinical pathogenicity probabilities.
 
 #### M2a: Global feature coefficients
 
-\[
+$$
 \eta_i=x_i^{\mathsf T}\beta,\qquad
 \beta_k\sim\mathcal N(0,s_{\beta,k}^2).
-\]
+$$
 
 M2a has no added copula score. Its declared group and pseudo-observation inputs do not enter this predictor. Omitting a dependence term does not prove empirical independence.
 
 #### M2b: Global coefficients with a global copula contribution
 
-Let \(z_{hi}\) and \(z_{ni}\) be inverse-Normal transforms of the supplied HPO/network pseudo-observations. The implemented Gaussian-copula log density is:
+Let $z_{hi}$ and $z_{ni}$ be inverse-Normal transforms of the supplied HPO/network pseudo-observations. The implemented Gaussian-copula log density is:
 
-\[
+$$
 \ell_i(\rho)=-\frac12\log(1-\rho^2)
 -\frac{\rho^2(z_{hi}^2+z_{ni}^2)-2\rho z_{hi}z_{ni}}{2(1-\rho^2)}.
-\]
+$$
 
-With availability mask \(m_i\) and \(\gamma\) denoting `beta_cop`:
+With availability mask $m_i$ and $\gamma$ denoting `beta_cop`:
 
-\[
+$$
 \rho=\tanh(r),\qquad
 \eta_i=x_i^{\mathsf T}\beta+\gamma m_i\ell_i(\rho),
-\]
+$$
 
-\[
+$$
 r\sim\mathcal N(0,s_{\mu\rho}^2),\qquad
 \gamma\sim\mathcal N(0,s_\gamma^2),\qquad
 \beta_k\sim\mathcal N(0,s_{\beta,k}^2).
-\]
+$$
 
 The raw correlation parameter is `rho_raw`. Correlation and copula utility are global. The utility coefficient is not constrained to be nonnegative.
 
 #### M3a: Partially pooled group coefficients
 
-\[
+$$
 \beta_{gk}=\beta_k+\tau_{\beta,k}z_{\beta,gk},\qquad
 \eta_i=\sum_k x_{ik}\beta_{g(i),k},
-\]
+$$
 
-\[
+$$
 z_{\beta,gk}\sim\mathcal N(0,1),\quad
 \beta_k\sim\mathcal N(0,s_{\beta,k}^2),\quad
 \tau_{\beta,k}\sim\mathrm{HalfNormal}(s_{\tau\beta,k}).
-\]
+$$
 
 The grouping factor must be declared in the run metadata. M3a adds no copula contribution. For the unseen-group slot `G + 1`, generated quantities sample a population-derived coefficient vector; rows assigned to that slot share it within a posterior draw.
 
@@ -407,28 +407,28 @@ The grouping factor must be declared in the run metadata. M3a adds no copula con
 
 M3b retains the M3a coefficient hierarchy and adds:
 
-\[
+$$
 \rho_g=\tanh(\mu_\rho+\tau_\rho z_{\rho,g}),\qquad
 \gamma_g=\gamma+\tau_\gamma z_{\gamma,g},
-\]
+$$
 
-\[
+$$
 \eta_i=\sum_k x_{ik}\beta_{g(i),k}
 +\gamma_{g(i)}m_i\ell_i(\rho_{g(i)}).
-\]
+$$
 
 The added priors are:
 
-\[
+$$
 z_{\rho,g},z_{\gamma,g}\overset{\mathrm{ind}}\sim\mathcal N(0,1),\quad
 \mu_\rho\sim\mathcal N(0,s_{\mu\rho}^2),\quad
 \gamma\sim\mathcal N(0,s_\gamma^2),
-\]
+$$
 
-\[
+$$
 \tau_\rho\sim\mathrm{HalfNormal}(s_{\tau\rho}),\qquad
 \tau_\gamma\sim\mathrm{HalfNormal}(s_{\tau\gamma}).
-\]
+$$
 
 Here, `mu_rho_raw` is the unconstrained location before the tanh transform; gamma and tau-gamma correspond to `beta_cop` and `tau_cop`. The Stan definitions supply the prior scales as data and include the half-Normal normalization constants. New-group coefficients, correlation, and utility are sampled from the fitted populations rather than silently assigned to an existing group.
 
@@ -442,10 +442,10 @@ R-hat, effective sample size, divergences, and treedepth answer different sampli
 
 Freeze the feature schema, transformations, group mapping, model definitions, priors/configuration, artifact identifiers, and checksums. The documented M3b deployment adapter averages three retained fold-specific predictors equally:
 
-\[
+$$
 \widehat p_i^{\mathrm{frozen}}=
 \frac13\sum_{f=1}^{3}\mathbb E_{\theta_f\mid D_{-f}}[p_i(\theta_f)].
-\]
+$$
 
 Average probabilities after within-case softmax, not coefficient vectors before softmax. This is neither one full-data posterior nor evidence-weighted Bayesian model averaging across the four specifications. An out-of-fold case uses its excluding component, not the new-case mixture of all components.
 
@@ -455,10 +455,10 @@ Average probabilities after within-case softmax, not coefficient vectors before 
 
 Apply the same feature function and frozen training state used by B9:
 
-\[
+$$
 X_{B9}=f(\mathrm{external\ candidates};\widehat\psi_{\mathrm{train}}),\qquad
 X_{C1}=f(\mathrm{case\ candidates};\widehat\psi_{\mathrm{train}}).
-\]
+$$
 
 The input identities differ; the feature meanings, column order, and fitted state must not. Similar column names do not make a phenotype BMA score interchangeable with an overlap feature, or an A integrated score interchangeable with a training gene-frequency prior.
 
@@ -468,20 +468,20 @@ Compare private-case baseline views with frozen external predictions without ref
 
 ### C4: Retain the hypothesis registry
 
-Align views by stable candidate/hypothesis identifiers and retain the declared weighted set, not just rank one. Record the rule producing nonnegative hypothesis weights \(q_j\) that sum to one; do not invent combination weights in documentation.
+Align views by stable candidate/hypothesis identifiers and retain the declared weighted set, not just rank one. Record the rule producing nonnegative hypothesis weights $q_j$ that sum to one; do not invent combination weights in documentation.
 
-For Track 2, combine the retained A and C registries by their union, preserving source membership and evidence. Duplicate identities need explicit reconciliation, not repeated counting. Missing C predictions are not negative evidence against an A-only hypothesis. The \(q_j\) assignment across the union must be declared and checked before downstream scenario weighting.
+For Track 2, combine the retained A and C registries by their union, preserving source membership and evidence. Duplicate identities need explicit reconciliation, not repeated counting. Missing C predictions are not negative evidence against an A-only hypothesis. The $q_j$ assignment across the union must be declared and checked before downstream scenario weighting.
 
 ## D — Mechanism-aware Track 2 exploration
 
 ### D0–D2: Uncertainty handoff, mechanisms, and targets
 
-Expand each retained hypothesis into its applicable mechanism scenarios. Join mechanisms to the matching hypothesis, not an unrestricted cross-join. With declared mechanism prior \(p_0(m\mid j)\):
+Expand each retained hypothesis into its applicable mechanism scenarios. Join mechanisms to the matching hypothesis, not an unrestricted cross-join. With declared mechanism prior $p_0(m\mid j)$:
 
-\[
+$$
 w_{jm}=\frac{q_j\,p_0(m\mid j)}
 {\sum_{j',m'}q_{j'}p_0(m'\mid j')}.
-\]
+$$
 
 Keep the declared prior separate from evidence-updated mechanism assessments. Competing loss-of-function, gain-of-function, dominant-negative, and unknown states may imply different intervention directions. Every removal or renormalization needs an audit reason.
 
@@ -500,17 +500,17 @@ Map genes to protein/target identifiers using versioned resources, preserving am
 
 Methods return evidence with provenance, or an explicit unavailable, disabled, or not-applicable status. Missing data sources are not replaced with toy evidence in production.
 
-For pathway target sets \(T_d\) and hypothesis-associated pathway genes \(P_j\), a declared overlap score is:
+For pathway target sets $T_d$ and hypothesis-associated pathway genes $P_j$, a declared overlap score is:
 
-\[
+$$
 J_{dj}=\frac{|T_d\cap P_j|}{|T_d\cup P_j|}.
-\]
+$$
 
-A signed-propagation contract may use the source-to-target adjacency \(W\):
+A signed-propagation contract may use the source-to-target adjacency $W$:
 
-\[
+$$
 x_{t+1}=\tanh(\alpha W^{\mathsf T}x_t+x_0).
-\]
+$$
 
 Edge orientation, signs, scale, and perturbation definitions must match the implementation. Signed methods require their validation/enablement checks; a simulated rescue score is not evidence of treatment efficacy. Controllability is a separately qualified analysis, not an automatic clinical gate.
 
@@ -518,9 +518,9 @@ Edge orientation, signs, scale, and perturbation definitions must match the impl
 
 Integrate declared evidence families with availability recorded:
 
-\[
+$$
 S_d=\frac{\sum_f v_f M_{df}e_{df}}{\sum_f v_f M_{df}}.
-\]
+$$
 
 The denominator must be positive. Preserve the number and identity of available families. Do not count mechanism evidence twice by copying it into the pathway family.
 
@@ -528,12 +528,12 @@ Direction compatibility, safety, and feasibility remain separate gates. A large 
 
 ### D6–D7: Scenario sensitivity and research reporting
 
-Perturb declared scenario and evidence-family weights, recompute scores, and rank all drugs within each draw. For \(k\) selected in configuration:
+Perturb declared scenario and evidence-family weights, recompute scores, and rank all drugs within each draw. For $k$ selected in configuration:
 
-\[
+$$
 \widehat\pi_d^{(k)}=\frac1B\sum_{b=1}^{B}
 \mathbf1\{\mathrm{rank}_b(d)\le k\}.
-\]
+$$
 
 Report rank ranges, coverage, gating status, and the assumptions that drive each ranking. These frequencies measure stability under the chosen scenarios; they are not probabilities of benefit. Final outputs remain research hypotheses, not treatment recommendations.
 
@@ -553,10 +553,10 @@ Keep these quantities separately labeled:
 |---|---|
 | Coverage-aware integrated score | Evidence summary under a declared scaling/weighting rule |
 | Prior-weighted normalized score | Conditional on the declared score/likelihood map and prior rule |
-| A11 top-\(m\) frequency | Robustness under the specified ranking perturbations |
+| A11 top-$m$ frequency | Robustness under the specified ranking perturbations |
 | Stan `p_new` | Within-case probability over the supplied candidate set |
 | Track 2 scenario weight | Declared hypothesis/mechanism weighting |
-| Drug top-\(k\) frequency | Ranking sensitivity, not efficacy or safety |
+| Drug top-$k$ frequency | Ranking sensitivity, not efficacy or safety |
 
 Reproduction requires more than matching filenames. Check identifiers, schemas, row counts, split/group separation, B9/C1 feature parity, frozen-model behavior, and the declared validation outputs.
 
