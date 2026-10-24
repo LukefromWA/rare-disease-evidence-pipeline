@@ -34,7 +34,14 @@ def main():
     for r in rows:
         cid = r["candidate_id"]
         if cid in found:
-            hc, hp = found[cid]; r[a.hgvsc] = clean_c(hc); r[a.hgvsp] = clean_p(hp); r["hgvs_merge_status"] = "matched" if (hc or hp) else "matched_no_hgvs"
+            hc, hp = found[cid]
+            hc = hc if hc and hc.strip() not in (".", "NA", "NaN") else ""
+            hp = hp if hp and hp.strip() not in (".", "NA", "NaN") else ""
+            if hc:
+                r[a.hgvsc] = clean_c(hc)
+            if hp:
+                r[a.hgvsp] = clean_p(hp)
+            r["hgvs_merge_status"] = "matched" if (hc or hp) else "matched_no_hgvs"
         else:
             r.setdefault(a.hgvsc, ""); r.setdefault(a.hgvsp, ""); r["hgvs_merge_status"] = "unmatched_transcript_or_no_csq"
         status[r["hgvs_merge_status"]] += 1

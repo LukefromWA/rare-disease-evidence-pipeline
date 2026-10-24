@@ -21,12 +21,16 @@ include: "rules/a_private.smk"
 include: "rules/c_frozen_inference.smk"
 include: "rules/e_track2_resources.smk"
 include: "rules/d_track2.smk"
+if config.get("frozen_stan", {}).get("enabled") is True:
+    include: "rules/c_stan_fresh.smk"
 include: "rules/f_report.smk"
 
 rule all:
+    default_target: True
     input:
+        RES + "/.ready",
         expand(OUT + "/{sample}/a10/ranked_candidates.tsv.gz", sample=SAMPLES),
-        expand(OUT + "/{sample}/c4/final_hypothesis_set.tsv.gz", sample=SAMPLES),
+        expand((OUT + ("/{sample}/c4_stan_union/current_Stan_final_hypothesis_set.tsv" if config.get("frozen_stan", {}).get("enabled") is True else "/{sample}/c4/final_hypothesis_set.tsv.gz")), sample=SAMPLES),
         expand(OUT + "/{sample}/d7/final_report.tsv", sample=SAMPLES),
 
 rule layer_a:
@@ -34,6 +38,6 @@ rule layer_a:
 rule layer_b:
     input: EXT + "/b14/frozen_M2.rds"
 rule layer_c:
-    input: expand(OUT + "/{sample}/c4/final_hypothesis_set.tsv.gz", sample=SAMPLES)
+    input: expand((OUT + ("/{sample}/c4_stan_union/current_Stan_final_hypothesis_set.tsv" if config.get("frozen_stan", {}).get("enabled") is True else "/{sample}/c4/final_hypothesis_set.tsv.gz")), sample=SAMPLES)
 rule layer_d:
     input: expand(OUT + "/{sample}/d7/final_report.tsv", sample=SAMPLES)

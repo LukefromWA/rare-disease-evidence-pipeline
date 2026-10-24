@@ -34,3 +34,14 @@
 !/config/
 /config/*
 !/config/a1.candidates.example.yaml
+
+# Reviewed native-resource staging adapter.
+!/workflow/scripts/e04_stage_resource.R
+
+# Reviewed fresh frozen-Stan workflow module.
+!/workflow/rules/
+/workflow/rules/*
+!/workflow/rules/c_stan_fresh.smk
+
+# Reviewed gene-key partition helper.
+!/workflow/scripts/a10_partition_gene_keys.py

@@ -88,7 +88,7 @@ rule d0_scenarios:
                 sample=wc.sample
             )
         ),
-        frozen=_t2_union_inputs,
+        frozen=lambda wc: _t2_union_inputs(wc),
         model_sources=_t2_model_inputs,
         ready=READY,
         code=SCRIPTS + "/d0_scenarios.R",

@@ -122,7 +122,7 @@ rule a2_shortlist:
     shell: "{RSCRIPT} {SCRIPTS}/a2_build_candidate_shortlist.R --config {CFG} --sample {wildcards.sample} --matrix {input.m} --outdir {OUT}/{wildcards.sample}/a2 > {log} 2>&1"
 
 rule a3_hgvs:
-    input: vcf=A + "/a0/annotated.biallelic.vcf.gz", sl=A + "/a2/shortlist.tsv.gz"
+    input: vcf=A + "/a0_candidates/candidates.vcf.gz", sl=A + "/a2/shortlist.tsv.gz"
     output: sl=A + "/a3/shortlist_hgvs.tsv.gz", audit=A + "/a3/hgvs_merge_audit.tsv", manifest=A + "/a3/manifest.json"
     log: A + "/logs/a3.log"
     shell: "python3 {SCRIPTS}/a3_merge_hgvs.py --vcf {input.vcf} --shortlist {input.sl} --out {output.sl} --audit {output.audit} > {log} 2>&1 && "
@@ -182,8 +182,32 @@ rule a9_stability:
     log: A + "/logs/a9.log"
     shell: "{RSCRIPT} {SCRIPTS}/a9_stability_influence.R --config {CFG} --sample {wildcards.sample} --integrated {input.i} --outdir {OUT}/{wildcards.sample}/a9 > {log} 2>&1"
 
+
+# Preserve symbol-unresolved variants outside the symbol-keyed gene ranking.
+rule a10_gene_key_partition:
+    input:
+        integrated=A + "/a7/integrated_scores.tsv.gz",
+        vcf=A + "/a0_candidates/candidates.vcf.gz",
+        code=SCRIPTS + "/a10_partition_gene_keys.py"
+    output:
+        named=A + "/a10_gene_keys/named_integrated_scores.tsv.gz",
+        unresolved=A + "/d7/symbol_unresolved_variant_evidence.tsv.gz",
+        audit=A + "/d7/gene_key_coverage.json"
+    log:
+        A + "/logs/a10_gene_key_partition.log"
+    shell:
+        r"""
+        mkdir -p "$(dirname {log:q})"
+        python3 {input.code:q} \
+          --input {input.integrated:q} \
+          --vcf {input.vcf:q} \
+          --named {output.named:q} \
+          --unresolved {output.unresolved:q} \
+          --audit {output.audit:q} > {log:q} 2>&1
+        """
+
 rule a10_aggregate:
-    input: i=A + "/a7/integrated_scores.tsv.gz", m=A + "/a8/mosaicism.tsv", f=A + "/a9/top_m_frequency.tsv", v=A + "/a6/view_agreement.tsv", d=A + "/a7/dependence.tsv", s=A + "/a7/shapley_top.tsv"
+    input: i=A + "/a10_gene_keys/named_integrated_scores.tsv.gz", gene_key_audit=A + "/d7/gene_key_coverage.json", symbol_unresolved=A + "/d7/symbol_unresolved_variant_evidence.tsv.gz", m=A + "/a8/mosaicism.tsv", f=A + "/a9/top_m_frequency.tsv", v=A + "/a6/view_agreement.tsv", d=A + "/a7/dependence.tsv", s=A + "/a7/shapley_top.tsv"
     output: r=A + "/a10/ranked_candidates.tsv.gz", manifest=A + "/a10/manifest.json"
     log: A + "/logs/a10.log"
     shell: "{RSCRIPT} {SCRIPTS}/a10_aggregate.R --config {CFG} --sample {wildcards.sample} --integrated {input.i} --mosaicism {input.m} --stability {input.f} --outdir {OUT}/{wildcards.sample}/a10 > {log} 2>&1"
