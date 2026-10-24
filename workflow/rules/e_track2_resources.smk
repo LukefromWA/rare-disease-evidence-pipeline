@@ -106,25 +106,33 @@ rule e22_validate_bundle:
 _T2_DRUG_SOURCE = yaml.safe_load(open(REG))["track2_resources"]["sources"]["drug_targets"]
 _T2_CHEMBL_NATIVE = os.path.join(RES, _T2_DRUG_SOURCE["native_dir"])
 _T2_CHEMBL_SUMS = os.path.join(_T2_CHEMBL_NATIVE, "native.sha256")
-_T2_CHEMBL_INPUTS = [
-    os.path.join(_T2_CHEMBL_NATIVE, "download_manifest.json"),
-    _T2_CHEMBL_SUMS,
-]
-with open(_T2_CHEMBL_SUMS) as _t2_stream:
-    for _t2_line in _t2_stream:
-        if _t2_line.strip():
-            _T2_CHEMBL_INPUTS.append(
-                os.path.join(
-                    _T2_CHEMBL_NATIVE,
-                    _t2_line.rstrip("\n").split("  ", 1)[1]
+def _t2_chembl_inputs(wildcards):
+    inputs = [
+        os.path.join(_T2_CHEMBL_NATIVE, "download_manifest.json"),
+        _T2_CHEMBL_SUMS,
+    ]
+
+    # Keep the missing inventory as a required input. Do not read it
+    # while loading unrelated parts of the workflow.
+    if not os.path.isfile(_T2_CHEMBL_SUMS):
+        return inputs
+
+    with open(_T2_CHEMBL_SUMS) as stream:
+        for line in stream:
+            if line.strip():
+                inputs.append(
+                    os.path.join(
+                        _T2_CHEMBL_NATIVE,
+                        line.rstrip("\n").split("  ", 1)[1]
+                    )
                 )
-            )
+    return inputs
 
 ruleorder: e06_prepare_drugs > e01_pull
 
 rule e06_prepare_drugs:
     input:
-        native=_T2_CHEMBL_INPUTS,
+        native=_t2_chembl_inputs,
         code=SCRIPTS + "/e13_build_drug_target_action_map.R",
         helper=SCRIPTS + "/../lib/track2_resources.R"
     output:
