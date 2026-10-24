@@ -8,17 +8,40 @@ I keep case evidence, external model training, frozen inference, and downstream 
 
 The project has two connected parts. Track 1 prepares and ranks candidate hypotheses. Track 2 examines their mechanisms and the evidence for possible drug-repurposing hypotheses. I retain the genomic, phenotype, network, and model-based evidence rather than treating their scores as interchangeable.
 
-The current implementation is on the [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow). I use this page on `main` for the project overview and methods.
+The current implementation is on the [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow). I use this page on `main` for the project overview and methods. The links below lead to the source, execution guides, and checks completed so far.
 
-To run the pipeline, start with the [step-by-step run instructions](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md#how-to-run). The [CLI guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/CLI.md) covers input requirements, configuration, command-line options, and historical handoff preparation.
+To run the pipeline, see the [step-by-step run instructions](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md#how-to-run) and the [CLI guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/CLI.md). These cover the configured runtime and required inputs, Track 1, historical candidate handoff preparation, Track 2, independent candidate-gene exploration, continuation, output locations, and CLI tests.
 
-The links below lead to the source, execution guides, and checks completed so far.
+| Looking for | Start with |
+|---|---|
+| Setup and step-by-step execution | [How to run](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md#how-to-run) |
+| CLI inputs, configuration, paths, and historical handoff preparation | [CLI guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/CLI.md) |
+| Analysis stages and entrypoints | [Workflow guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md) |
+| Master workflow | [workflow/Snakefile](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/Snakefile) |
+| Stage dependencies and commands | [Rule modules](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/rules) |
+| Calculations and shared functions | [Scripts](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/scripts) and [workflow library](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/lib) |
+| External training and retained-fit records | [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) |
+| Standalone ranking-sensitivity analysis | [A11 execution guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/A11_REPRODUCIBILITY.md) |
+| Software versions and citations | [Software record](docs/SOFTWARE.md) |
+| Original source-import checks and reproduction boundary | [Master workflow checkpoint](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/MASTER_WORKFLOW_CHECKPOINT.md) |
 
 ### Current execution status
 
-I checked the repository master with a local Snakemake dry run. It produced a 39-job plan through A10, C4, and D7 using my existing private configuration, resource snapshots, frozen external artifacts, and local R launcher. The dry run checked the execution plan; I have not yet verified the full analysis or a fresh-checkout setup for this checkpoint.
+I completed the configured Linux/WSL workflow through Track 1, an explicitly prepared same-case historical candidate handoff, and Track 2. The run used existing VEP-annotated input, my private configuration, prepared local resources, and frozen external model artifacts. Output integrity and cross-stage consistency were checked, and all 15 CLI tests passed.
 
-The master reuses the external model artifacts rather than running B training. Its `all` target requests A10 ranked candidates, C4 hypotheses, and the D7 report table. A11, optional Track 2 analyses, and PDF reporting have separate execution paths. I still need to finish the master configuration example and verify portable environment restoration.
+| Stage | Completed steps | Observed elapsed time |
+|---|---:|---:|
+| Track 1 | 22/22 | 22 minutes, 7 seconds |
+| Historical candidate handoff | 2/2 | About 5 seconds |
+| Track 2 | 17/17 | 56 seconds |
+
+These are observed single-core execution times for the configured route, excluding installation, resource preparation, raw VCF annotation, and manual handoff preparation. The workflow was repaired and resumed during validation, so these timings are not a clean-install or uninterrupted runtime benchmark.
+
+The earlier source-import checkpoint produced a successful 39-job Snakemake dry-run plan through A10, C4, and D7 using my existing private configuration, resource snapshots, frozen external artifacts, and local R launcher. That checkpoint checked the execution plan without running analysis jobs; the configured execution described above came afterward.
+
+The master reuses frozen external model artifacts rather than running B training. Its `all` target requests resource readiness, A10 ranked candidates, the selected C4 handoff, and the D7 report table. The CLI Track 1 target includes A11 in fresh-Stan mode, while standalone A11, optional Track 2 analyses, and PDF reporting have separate execution paths.
+
+The completed run demonstrates the configured existing-VEP route, not portable fresh-checkout reproduction. A complete portable master configuration example and verified environment restoration remain separate work. Raw VCF-to-VEP execution and full interactive end-to-end execution still require dedicated integration tests. Optional methods report their availability explicitly; PDF generation is not part of the demonstrated `all` target.
 
 ### Repository map
 
@@ -26,15 +49,22 @@ This tree shows selected paths on the `workflow` branch. It is not the file tree
 
 ```text
 rare-disease-evidence-pipeline/          # workflow branch
-├── README.md                           # Project overview and methods
+├── README.md                           # Project overview, methods, and run instructions
+├── bin/
+│   └── mva                             # Interactive and noninteractive CLI
 ├── config/
 │   ├── a11.example.yaml                # Standalone A11 example
 │   └── layer_a.parameters.yaml         # Reviewed Layer A parameter record
 ├── environment/
 │   ├── a11-snakemake-test.requirements.txt
 │   └── no-training.renv.lock            # Recorded lean R environment
+├── tests/
+│   ├── test_cli_interactive.py         # Interactive configuration and path tests
+│   └── test_cli_resource_manifest.py   # Resource-manifest regression tests
 ├── workflow/
+│   ├── README.md                       # Workflow guide and step-by-step execution
 │   ├── Snakefile                       # No-training master entrypoint
+│   ├── track2_genes.Snakefile           # Independent unweighted gene exploration
 │   ├── rules/                          # Stage dependencies and commands
 │   ├── scripts/                        # Executable analysis stages
 │   ├── lib/                            # Shared calculations and validation
@@ -42,7 +72,9 @@ rare-disease-evidence-pipeline/          # workflow branch
 │   └── layer_a/
 │       └── Snakefile                   # Standalone A11 entrypoint
 ├── models/                             # Model specifications and interpretation
-└── docs/                               # Methods, validation and checkpoints
+└── docs/
+    ├── CLI.md                          # CLI inputs, boundaries, and historical handoff
+    └── ...                             # Methods, validation, and checkpoints
 ```
 
 ### Analysis components
@@ -81,11 +113,11 @@ D1 currently carries the configured mechanism priors forward without an evidence
 
 ## Repository status and navigation
 
-The sections below explain the scientific methods and assumptions. Implementation and validation status are recorded separately so the mathematical description is not mistaken for a completed end-to-end run.
+The sections below explain the scientific methods and assumptions. The execution status above records the configured route I completed; the methods description also includes optional analyses with their own dependencies and validation requirements.
 
 - `main` contains the portfolio overview, model documentation, software record, and development-policy documentation.
 - The [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow) contains the integrated source and execution records.
-- The [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) contains the imported Stan definitions, retained-fit diagnostics, and model documentation. This README edit does not merge those branches.
+- The [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) contains the imported Stan definitions, retained-fit diagnostics, and model documentation.
 - [Model documentation](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/models) explains the four fitted specifications.
 - [Stan definitions](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/workflow/stan) are the executable reference for the model equations below.
 - [Environment records](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/environment) describe the imported training environment.
@@ -332,6 +364,7 @@ With availability mask m_i and gamma denoting `beta_cop`:
 \rho=\tanh(r),\qquad
 \eta_i=x_i^{\mathsf T}\beta+\gamma m_i\ell_i(\rho),
 ```
+
 ```math
 r\sim\mathcal N(0,s_{\mu\rho}^2),\qquad
 \gamma\sim\mathcal N(0,s_\gamma^2),\qquad
@@ -346,6 +379,7 @@ The raw correlation parameter is `rho_raw`. Correlation and copula utility are g
 \beta_{gk}=\beta_k+\tau_{\beta,k}z_{\beta,gk},\qquad
 \eta_i=\sum_k x_{ik}\beta_{g(i),k},
 ```
+
 ```math
 z_{\beta,gk}\sim\mathcal N(0,1),\quad
 \beta_k\sim\mathcal N(0,s_{\beta,k}^2),\quad
@@ -362,6 +396,7 @@ M3b retains the M3a coefficient hierarchy and adds:
 \rho_g=\tanh(\mu_\rho+\tau_\rho z_{\rho,g}),\qquad
 \gamma_g=\gamma+\tau_\gamma z_{\gamma,g},
 ```
+
 ```math
 \eta_i=\sum_k x_{ik}\beta_{g(i),k}
 +\gamma_{g(i)}m_i\ell_i(\rho_{g(i)}).
@@ -374,6 +409,7 @@ z_{\rho,g},z_{\gamma,g}\overset{\mathrm{ind}}\sim\mathcal N(0,1),\quad
 \mu_\rho\sim\mathcal N(0,s_{\mu\rho}^2),\quad
 \gamma\sim\mathcal N(0,s_\gamma^2),
 ```
+
 ```math
 \tau_\rho\sim\mathrm{HalfNormal}(s_{\tau\rho}),\qquad
 \tau_\gamma\sim\mathrm{HalfNormal}(s_{\tau\gamma}).
@@ -523,8 +559,7 @@ My Hackathon submission is subject to CC BY 4.0, as required by the organizers. 
 
 ## AI assistance
 
-I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training, and checked those settings throughout the project. 
-
+I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training, and checked those settings throughout the project.
 
 See the [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
