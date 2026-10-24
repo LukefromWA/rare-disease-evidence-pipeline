@@ -6,7 +6,18 @@ The workflow emphasizes interpretability: why a candidate ranks highly, which ev
 
 The connected readthrough extension adds transcript-context verification, genomic mapping, published RTDetective prediction lookups, and source-linked literature evidence while keeping computational predictions separate from demonstrated biological effects.
 
-## Start here
+
+## Track 2 — Drug Repurposing Presentation
+
+**Lucas Anderson | LukefromWA | Rare Disease, Real Kid: MVA Hackathon 2026**
+
+[![Watch the Track 2 presentation](https://img.youtube.com/vi/o5of9Upa75k/hqdefault.jpg)](https://youtu.be/o5of9Upa75k)
+
+*Click the image above to watch the three-minute Track 2 presentation.*
+
+
+
+## Start here ##
 
 The project has two connected parts. Track 1 prepares and ranks candidate hypotheses. Track 2 examines their mechanisms and the evidence for possible drug-repurposing hypotheses. I retain the genomic, phenotype, network, and model-based evidence rather than treating their scores as interchangeable.
 
