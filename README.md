@@ -36,9 +36,30 @@ The run covered core candidate analysis, frozen-model scoring, readthrough
 routing, transcript-context verification, genomic mapping, external-prediction
 lookups, and source-linked claim ledgers.
 
-Execution uses the documented runtime, prepared reference resources, retained
-model artifacts, and authorized inputs. Detailed run conditions, earlier CLI
-checks, and method-specific availability are recorded in the execution guides.
+The run used existing VEP annotations, prepared reference resources, retained
+external-model artifacts, and authorized inputs. The recorded duration excludes
+installation, initial annotation, external-model training, resource acquisition,
+and manual literature curation. It is an observed runtime for the configured
+environment, not a clean-install benchmark.
+
+### Core and extended execution
+
+The master workflow applies frozen external-model artifacts without rerunning
+B training. Its default `all` target requests resource readiness, A10 ranked
+candidates, the selected C4 handoff, and the D7 report table. The `full_extended`
+target additionally connects the readthrough, external-prediction, and
+claim-ledger stages to the final completion audit.
+
+The CLI Track 1 target includes A11 in fresh-Stan mode. Standalone A11,
+optional Track 2 analyses, and PDF reporting have separate execution paths;
+completion of the core or extended target does not imply that PDF reporting
+was run.
+
+### Earlier CLI validation: historical-handoff route
+
+An earlier CLI validation completed Track 1, an explicitly prepared same-case
+historical candidate handoff, and Track 2. The counts below describe that
+earlier route, not a breakdown of the later 62-job extended run.
 
 | Stage | Completed steps | Observed elapsed time |
 |---|---:|---:|
@@ -46,13 +67,22 @@ checks, and method-specific availability are recorded in the execution guides.
 | Historical candidate handoff | 2/2 | About 5 seconds |
 | Track 2 | 17/17 | 56 seconds |
 
-These are observed single-core execution times for the configured route, excluding installation, resource preparation, raw VCF annotation, and manual handoff preparation. The workflow was repaired and resumed during validation, so these timings are not a clean-install or uninterrupted runtime benchmark.
+These are observed single-core execution times, excluding installation,
+resource preparation, raw VCF annotation, and manual handoff preparation.
+The route was repaired and resumed during validation, so these timings are
+historical execution records rather than an uninterrupted runtime benchmark.
 
-The earlier source-import checkpoint produced a successful 39-job Snakemake dry-run plan through A10, C4, and D7 using my existing private configuration, resource snapshots, frozen external artifacts, and local R launcher. That checkpoint checked the execution plan without running analysis jobs; the configured execution described above came afterward.
+### Execution records and setup
 
-The master reuses frozen external model artifacts rather than running B training. Its `all` target requests resource readiness, A10 ranked candidates, the selected C4 handoff, and the D7 report table. The CLI Track 1 target includes A11 in fresh-Stan mode, while standalone A11, optional Track 2 analyses, and PDF reporting have separate execution paths.
+Before these analysis runs, the source-import checkpoint produced a successful
+39-job Snakemake dry-run plan through A10, C4, and D7. That checkpoint verified
+the execution plan without running analysis jobs; the subsequent configured
+runs established execution completion.
 
-The completed run demonstrates the configured existing-VEP route, not portable fresh-checkout reproduction. A complete portable master configuration example and verified environment restoration remain separate work. Raw VCF-to-VEP execution and full interactive end-to-end execution still require dedicated integration tests. Optional methods report their availability explicitly; PDF generation is not part of the demonstrated `all` target.
+See the workflow and CLI guides for runtime setup, required inputs, supported
+analysis routes, and method-specific availability. Detailed checkpoint records
+document execution conditions, environment-restoration status, and integration
+test coverage separately from the completed analysis runs.
 
 ### Repository map
 
@@ -102,7 +132,7 @@ rare-disease-evidence-pipeline/          # workflow branch
 
 ### Execution and data flow
 
-I develop the external models separately from the case analysis, then apply the frozen models without refitting them on the case. The diagram shows those relationships; separate reporting and optional analyses are not all included in the master `all` target.
+I developed the external models separately from the case analysis, then apply the frozen models without refitting them on the case. The diagram shows those relationships; separate reporting and optional analyses are not all included in the master `all` target.
 
 ```mermaid
 flowchart LR
