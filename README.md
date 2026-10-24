@@ -6,7 +6,9 @@ I separate case evidence, external model development, frozen inference, and down
 
 ## Repository status and navigation
 
-This README describes the workflow and its mathematical contracts. It is not a claim that every stage is already imported, enabled or validated end to end on `main`.
+The CLI provides `bin/mva` for Track 1, Track 2 and independent candidate-gene exploration. Start with [How to run](#how-to-run), or see the [CLI guide](docs/CLI.md) for detailed inputs and historical handoff preparation.
+
+This README describes the workflow, its mathematical contracts and the steps for running the configured analysis.
 
 - `main` currently contains the portfolio overview and development-policy documentation.
 - The [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) contains the imported Stan definitions, retained-fit diagnostic material and model documentation. These files are not merged by this README update.
@@ -15,7 +17,175 @@ This README describes the workflow and its mathematical contracts. It is not a c
 - [Environment records](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/environment) record the imported tooling environment.
 - [AI assistance disclosure](docs/AI_ASSISTANCE.md) records the current disclosure.
 
-There is not yet a verified one-command reproduction path from a fresh checkout of `main`. Unavailable analyses and teaching stand-ins must remain labeled rather than presented as completed production methods.
+The configured Linux/WSL workflow has completed end to end, including Track 1, historical candidate handoff and Track 2, with output checks and 15 passing CLI tests. Setup requires the runtime environment, model artifacts and resource bundles described below. Optional methods record their availability explicitly.
+
+## How to run
+
+### 1. Prepare the environment and resources
+
+Use Linux or WSL with the configured Python, R, Snakemake and supporting
+command-line tools available. Activate the runtime environment and provision
+the resource/model/analysis profile, frozen model artifacts, core resource
+bundle and matching Reactome hierarchy.
+
+From the repository root:
+
+```bash
+./bin/mva --help
+```
+
+Set `MVA_PYTHON` if the launcher needs an explicit Python interpreter.
+Keep the matching Snakemake and supporting tools on `PATH`.
+
+Setup time depends on which dependencies and resource bundles are already
+available. The execution times below exclude installation, resource preparation
+and raw VCF annotation.
+
+### 2. Run Track 1
+
+Start the interactive menu:
+
+```bash
+./bin/mva
+```
+
+Choose `1`, then enter:
+
+1. The number of cores.
+2. The complete profile and project/data root.
+3. Confirmation of the profile's QC thresholds, priors and mechanism assumptions.
+4. The variant inputs.
+5. The selected sample label and observed HPO text file.
+6. A new private run directory outside the repository.
+
+For an existing VEP-annotated VCF, answer `n` to raw input and `y` to existing
+VEP output. Supply these files at their respective prompts:
+
+| Prompt | Input |
+|---|---|
+| Existing VEP-annotated VCF | Annotated `.vcf.gz` |
+| Annotated VCF index | Matching `.vcf.gz.tbi` |
+| Original VEP command/provenance | Original command or provenance text file |
+| Observed HPO text file | One `HP:nnnnnnn` term per line |
+
+The wizard saves `run.yaml`, a sample sheet and phenotype snapshots in the
+new workspace. To execute, answer `n` to “Plan only” and confirm execution.
+
+A saved configuration can also be run directly:
+
+```bash
+./bin/mva track1 \
+  --config /path/to/workspace/run.yaml \
+  --root /path/to/project-data \
+  --cores 1
+```
+
+Add `--dry-run` to preview the job plan without executing the analysis.
+
+Estimated runtime: about 22 minutes for the observed single-core,
+existing-VEP run. Raw annotation time is additional and was not measured
+in this run.
+
+### 3. Prepare the historical candidate handoff
+
+The current connected route combines freshly scored candidates with explicitly
+configured same-case historical C4/A10 candidates.
+
+Follow [Historical handoff preparation](docs/CLI.md#existing-case-historical-handoff-preparation)
+to verify the historical manifest and input checksums, save a separate
+`track2_handoff.yaml`, and build the new C4 union using the completed Track 1
+artifacts.
+
+Track 1 alone does not build this historical union. The existing-run Track 2
+command expects it to be prepared first.
+
+Estimated runtime: about 5 seconds for the observed handoff build after
+configuration and verification.
+
+### 4. Run Track 2
+
+Use the prepared handoff configuration:
+
+```bash
+./bin/mva track2 \
+  --config /path/to/workspace/track2_handoff.yaml \
+  --root /path/to/project-data \
+  --cores 1
+```
+
+Add `--dry-run` to preview execution.
+
+The interactive existing-run route is also available through menu choice `2`,
+then `1`. It resolves `run.yaml` before legacy `config.yaml`. Use `--config`
+when selecting a separately prepared handoff configuration.
+
+Estimated runtime: about 1 minute for the observed core-resource run.
+Available methods, candidate counts, resource sizes and live-query latency
+affect runtime.
+
+For independent candidate-gene exploration instead of weighted case analysis:
+
+```bash
+./bin/mva track2 --genes TP53 BRCA1 \
+  --resources /path/to/validated-core-resources \
+  --hierarchy /path/to/matching-reactome-hierarchy \
+  --out /path/to/new-gene-run \
+  --cores 1 --dry-run
+```
+
+Remove `--dry-run` to execute. The gene-only route produces unweighted
+exploration; it does not create variant evidence, Stan probabilities or
+mechanism weights.
+
+### 5. Inspect the results
+
+Case outputs are stored under the configured output root and sample label:
+
+| Output | Location |
+|---|---|
+| Track 1 ranking | `a10/ranked_candidates.tsv.gz` |
+| Frozen prediction summary | `c3_stan_cv/stan_cv_predictions_summary.tsv` |
+| Ranking-sensitivity results | `a11_review/calculation/` |
+| Evidence-method status | `d3/*status.tsv` |
+| Held/excluded scenario-drug rows | `d5/held_or_excluded.tsv` |
+| Sensitivity and scenario coverage | `d6/status.tsv` |
+| Track 2 final report | `d7/final_report.tsv` |
+| Execution logs | `logs/` |
+
+Optional methods report unavailable, disabled or not-applicable status
+explicitly. A report with no eligible drugs is a valid result; the eligibility
+audit records why rows were held or excluded. Patient HPO inputs and the
+optional drug-indication HPO resource serve different purposes.
+
+Outputs support computational research and human review, not treatment
+recommendations. Keep private case inputs, configurations and generated results
+outside the public repository.
+
+### 6. End-to-end run and reproducibility
+
+The configured Linux/WSL run completed Track 1, the historical candidate
+handoff and Track 2. Output checks covered the final report, method-status
+files, eligibility audit and scenario coverage. All 15 existing CLI tests passed.
+
+| Stage | Completed steps | Observed elapsed time |
+|---|---:|---:|
+| Track 1 | 22/22 | 22 minutes, 7 seconds |
+| Historical handoff | 2/2 | About 5 seconds |
+| Track 2 | 17/17 | 56 seconds |
+
+Allow approximately 23 minutes of execution time for a comparable configured
+single-core run, plus setup and manual handoff preparation. These are observed
+timings, not benchmarks for other machines or datasets.
+
+Run the CLI tests with the configured Python:
+
+```bash
+python -m unittest discover -s tests -p 'test_cli*.py' -v
+```
+
+The tested path used existing VEP output, prepared local resources and an
+explicit historical handoff. Raw VCF-to-VEP execution and optional methods
+require their own dependencies and checks.
 
 ## Workflow overview
 

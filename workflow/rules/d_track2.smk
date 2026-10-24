@@ -120,7 +120,7 @@ rule d1_mechanism:
     input: s=D + "/d0/scenarios.tsv.gz"
     output: m=D + "/d1/mechanism.tsv.gz", manifest=D + "/d1/manifest.json"
     log: D + "/logs/d1.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d1_mechanism.R --config {CFG} --sample {wildcards.sample} --scenarios {input.s} --outdir {OUT}/{wildcards.sample}/d1 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d1_mechanism.R --config {CFG:q} --sample {wildcards.sample} --scenarios {input.s:q} --outdir {OUT:q}/{wildcards.sample}/d1 > {log:q} 2>&1"
 rule d2_targets:
     input:
         m=D + "/d1/mechanism.tsv.gz",
@@ -157,20 +157,20 @@ rule d3_1:
     input: gates=SCRIPTS + "/../lib/gates.R", t=D + "/d2/target_universe.tsv.gz"
     output: o=D + "/d3/method1_target_query.tsv.gz", manifest=D + "/d3/manifest_d3_1.json"
     log: D + "/logs/d3_1.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d3_1_target_query.R --config {CFG} --sample {wildcards.sample} --targets {input.t} --outdir {OUT}/{wildcards.sample}/d3 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d3_1_target_query.R --config {CFG:q} --sample {wildcards.sample} --targets {input.t:q} --outdir {OUT:q}/{wildcards.sample}/d3 > {log:q} 2>&1"
 rule d3_2:
     output: D + "/d3/d3_2_signature_reversal_status.tsv"
     log: D + "/logs/d3_2.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d3_2_signature_reversal.R --config {CFG} --sample {wildcards.sample} --outdir {OUT}/{wildcards.sample}/d3 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d3_2_signature_reversal.R --config {CFG:q} --sample {wildcards.sample} --outdir {OUT:q}/{wildcards.sample}/d3 > {log:q} 2>&1"
 rule d3_3:
     input: t=D + "/d2/target_universe.tsv.gz", ready=READY
     output: o=D + "/d3/method3_pathway.tsv.gz", manifest=D + "/d3/manifest_d3_3.json"
     log: D + "/logs/d3_3.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d3_3_pathway.R --config {CFG} --sample {wildcards.sample} --targets {input.t} --outdir {OUT}/{wildcards.sample}/d3 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d3_3_pathway.R --config {CFG:q} --sample {wildcards.sample} --targets {input.t:q} --outdir {OUT:q}/{wildcards.sample}/d3 > {log:q} 2>&1"
 rule d3_4:
     output: D + "/d3/d3_4_phenotype_similarity_status.tsv"
     log: D + "/logs/d3_4.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d3_4_phenotype_similarity.R --config {CFG} --sample {wildcards.sample} --outdir {OUT}/{wildcards.sample}/d3 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d3_4_phenotype_similarity.R --config {CFG:q} --sample {wildcards.sample} --outdir {OUT:q}/{wildcards.sample}/d3 > {log:q} 2>&1"
 rule d3_5:
     input:
         scenarios=D + "/d0/scenarios.tsv.gz",
@@ -232,7 +232,7 @@ rule d3_6:
 rule d3_7:
     output: D + "/d3/d3_7_controllability_status.tsv"
     log: D + "/logs/d3_7.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d3_7_controllability.R --config {CFG} --sample {wildcards.sample} --outdir {OUT}/{wildcards.sample}/d3 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d3_7_controllability.R --config {CFG:q} --sample {wildcards.sample} --outdir {OUT:q}/{wildcards.sample}/d3 > {log:q} 2>&1"
 rule d3_8:
     input:
         s7=D + "/d3/d3_7_controllability_status.tsv",
@@ -257,7 +257,7 @@ rule d4_integrate:
         s2=D + "/d3/d3_2_signature_reversal_status.tsv", s4=D + "/d3/d3_4_phenotype_similarity_status.tsv", s5=D + "/d3/d3_5_literature_status.tsv", s8=D + "/d3/d3_8_rescue_optimization_status.tsv"   # all D3 outputs or explicit statuses
     output: e=D + "/d4/evidence.tsv.gz", manifest=D + "/d4/manifest.json"
     log: D + "/logs/d4.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d4_integrate.R --config {CFG} --sample {wildcards.sample} --targets {input.t} --method1 {input.m1} --method3 {input.m3} --method6 {input.m6} --outdir {OUT}/{wildcards.sample}/d4 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d4_integrate.R --config {CFG:q} --sample {wildcards.sample} --targets {input.t:q} --method1 {input.m1:q} --method3 {input.m3:q} --method6 {input.m6:q} --outdir {OUT:q}/{wildcards.sample}/d4 > {log:q} 2>&1"
 rule d5_safety_gate:
     input:
         e=D + "/d4/evidence.tsv.gz",
@@ -312,7 +312,7 @@ rule d7_report:
     input: code=SCRIPTS + "/d7_report.R", g=D + "/d5/gated.tsv.gz", s=D + "/d6/sensitivity.tsv"
     output: r=D + "/d7/final_report.tsv", manifest=D + "/d7/manifest.json"
     log: D + "/logs/d7.log"
-    shell: "{RSCRIPT} {SCRIPTS}/d7_report.R --config {CFG} --sample {wildcards.sample} --gated {input.g} --sensitivity {input.s} --outdir {OUT}/{wildcards.sample}/d7 > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/d7_report.R --config {CFG:q} --sample {wildcards.sample} --gated {input.g:q} --sensitivity {input.s:q} --outdir {OUT:q}/{wildcards.sample}/d7 > {log:q} 2>&1"
 
 
 rule d2_label_evidence:

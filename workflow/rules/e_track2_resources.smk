@@ -177,23 +177,23 @@ rule e01_pull:
         rel="(?:" + "|".join(__import__("re").escape(value) for value in SRC.values()) + ")"
     log: RES + "/logs/e01_{rel}.log"
     params: src=lambda wc: [k for k, v in SRC.items() if v == wc.rel][0]
-    shell: "{RSCRIPT} {SCRIPTS}/e01_pull_resource.R --registry {input.reg} --root {RES} --source {params.src} > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/e01_pull_resource.R --registry {input.reg:q} --root {RES:q} --source {params.src} > {log:q} 2>&1"
 
 rule e10_gene_map:
     input: raw=rules.e02_prepare_uniprot.output.table, ok=rules.e00_registry.output
     output: m=DER + "/gene_protein_map.tsv.gz", lk=DER + "/uniprot_gene_lookup.tsv.gz", m_mf=DER + "/gene_protein_map.tsv.gz.resource_manifest.json", lk_mf=DER + "/uniprot_gene_lookup.tsv.gz.resource_manifest.json"
     log: RES + "/logs/e10.log"
-    shell: "{RSCRIPT} {SCRIPTS}/e10_build_gene_protein_map.R --registry {REG} --raw {input.raw} --out_map {output.m} --out_lookup {output.lk} > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/e10_build_gene_protein_map.R --registry {REG:q} --raw {input.raw:q} --out_map {output.m:q} --out_lookup {output.lk:q} > {log:q} 2>&1"
 rule e11_signed_edges:
     input: raw=rules.e03_prepare_signor.output.table, lk=rules.e10_gene_map.output.lk
     output: e=DER + "/signed_directed_edges.tsv.gz", c=DER + "/signed_network_conflicts.tsv.gz", a=DER + "/signed_network_drop_audit.tsv", e_mf=DER + "/signed_directed_edges.tsv.gz.resource_manifest.json", c_mf=DER + "/signed_network_conflicts.tsv.gz.resource_manifest.json"
     log: RES + "/logs/e11.log"
-    shell: "{RSCRIPT} {SCRIPTS}/e11_build_signed_edges.R --registry {REG} --raw {input.raw} --lookup {input.lk} --out_edges {output.e} --out_conflicts {output.c} --out_audit {output.a} > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/e11_build_signed_edges.R --registry {REG:q} --raw {input.raw:q} --lookup {input.lk:q} --out_edges {output.e:q} --out_conflicts {output.c:q} --out_audit {output.a:q} > {log:q} 2>&1"
 rule e12_reactome:
     input: raw=rules.e04_stage_reactome.output.table, lk=rules.e10_gene_map.output.lk
     output: table=DER + "/reactome_gene_sets.tsv.gz", mf=DER + "/reactome_gene_sets.tsv.gz.resource_manifest.json"
     log: RES + "/logs/e12.log"
-    shell: "{RSCRIPT} {SCRIPTS}/e12_build_reactome_gene_sets.R --registry {REG} --raw {input.raw} --lookup {input.lk} --out {output.table:q} > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/e12_build_reactome_gene_sets.R --registry {REG:q} --raw {input.raw:q} --lookup {input.lk:q} --out {output.table:q} > {log:q} 2>&1"
 rule e13_drugs:
     input:
         raw=rules.e06_prepare_drugs.output.raw,
@@ -215,18 +215,18 @@ rule e14_safety:
     input: raw=RAW + "/safety/pediatric_safety.tsv.gz"
     output: DER + "/pediatric_safety_map.tsv.gz"
     log: RES + "/logs/e14.log"
-    shell: "{RSCRIPT} {SCRIPTS}/e14_build_pediatric_safety_map.R --registry {REG} --raw {input.raw} --out {output} > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/e14_build_pediatric_safety_map.R --registry {REG:q} --raw {input.raw:q} --out {output:q} > {log:q} 2>&1"
 rule e20_audit_graph:
     input: e=rules.e11_signed_edges.output.e, d=rules.e13_drugs.output.table
     output: g=GR + "/signed_directed_graph.rds", a=DER + "/signed_network_audit.tsv", m=GR + "/signed_directed_graph_metadata.json"
     log: RES + "/logs/e20.log"
-    shell: "{RSCRIPT} {SCRIPTS}/e20_audit_signed_network.R --edges {input.e} --drugs {input.d} --out_graph {output.g} --out_audit {output.a} --out_meta {output.m} > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/e20_audit_signed_network.R --edges {input.e:q} --drugs {input.d:q} --out_graph {output.g:q} --out_audit {output.a:q} --out_meta {output.m:q} > {log:q} 2>&1"
 rule e21_enablement:
     input: code=SCRIPTS + "/e21_signed_propagation_checks.R", g=GR + "/signed_directed_graph.rds"
     output: report=MAN + "/signed_propagation_checks.tsv"
     log: RES + "/logs/e21.log"
     params: sentinel=RES + "/.signed_propagation_enabled"
-    shell: "{RSCRIPT} {SCRIPTS}/e21_signed_propagation_checks.R --graph {input.g} --sentinel {params.sentinel} --report {output.report} > {log} 2>&1"
+    shell: "{RSCRIPT} {SCRIPTS:q}/e21_signed_propagation_checks.R --graph {input.g:q} --sentinel {params.sentinel} --report {output.report:q} > {log:q} 2>&1"
 rule e22_validate_bundle:
     input:
         g=rules.e20_audit_graph.output.g,

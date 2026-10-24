@@ -41,3 +41,20 @@ rule layer_c:
     input: expand((OUT + ("/{sample}/c4_stan_union/current_Stan_final_hypothesis_set.tsv" if config.get("frozen_stan", {}).get("enabled") is True else "/{sample}/c4/final_hypothesis_set.tsv.gz")), sample=SAMPLES)
 rule layer_d:
     input: expand(OUT + "/{sample}/d7/final_report.tsv", sample=SAMPLES)
+
+# Track 1 scoring and A11; the historical union is a separate Track 2 handoff.
+rule track1:
+    input:
+        rules.layer_a.input,
+        expand(
+            OUT + "/{sample}/c3_stan_cv/stan_cv_predictions.rds",
+            sample=SAMPLES
+        ) if config.get("frozen_stan", {}).get("enabled") is True else rules.layer_c.input,
+        expand(
+            OUT + "/{sample}/c3_stan_cv/stan_cv_predictions_summary.tsv",
+            sample=SAMPLES
+        ) if config.get("frozen_stan", {}).get("enabled") is True else [],
+        expand(
+            OUT + "/{sample}/a11_review/calculation/bayesian_dependence_sensitivity_ensemble_consensus.csv",
+            sample=SAMPLES
+        ) if config.get("frozen_stan", {}).get("enabled") is True else []

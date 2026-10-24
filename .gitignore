@@ -45,3 +45,21 @@
 
 # Reviewed gene-key partition helper.
 !/workflow/scripts/a10_partition_gene_keys.py
+
+# Reviewed CLI entrypoints and documentation.
+!/bin/
+/bin/*
+!/bin/mva
+!/workflow/scripts/mva_cli.py
+!/workflow/track2_genes.Snakefile
+!/docs/
+/docs/*
+!/docs/CLI.md
+
+# CLI resource-manifest regression tests.
+!/tests/
+/tests/*
+!/tests/test_cli_resource_manifest.py
+
+# Reviewed interactive CLI tests.
+!/tests/test_cli_interactive.py

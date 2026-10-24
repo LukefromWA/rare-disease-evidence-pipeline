@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec "${MVA_PYTHON:-python3}" "$HERE/../workflow/scripts/mva_cli.py" "$@"

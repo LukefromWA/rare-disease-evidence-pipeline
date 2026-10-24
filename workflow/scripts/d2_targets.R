@@ -5,11 +5,33 @@
 # Preserve discovery associations and weights; add separate model provenance.
 
 a <- parse_args(c(
-    "config", "sample", "mechanism", "model_views", "hierarchy_dir", "outdir"
-))
+    "config", "sample", "mechanism", "hierarchy_dir", "outdir"
+), c("model_views", "input_mode"))
+input_mode <- if (is.null(a$input_mode)) "frozen_union" else a$input_mode
+if (!input_mode %in% c("frozen_union", "gene_only"))
+    stop("Unsupported D2 input mode")
 cfg <- read_config(a$config)
 b <- require_bundle(cfg)
 sc <- read_gz(a$mechanism)
+if (identical(input_mode, "gene_only")) {
+    need_cols(sc, c(
+        "hypothesis_id", "scenario_id", "gene", "variant", "mechanism"
+    ), "manual gene hypotheses")
+    if (!nrow(sc) || anyNA(sc$gene) || any(!nzchar(trimws(sc$gene))) ||
+        anyDuplicated(sc$hypothesis_id) || anyDuplicated(sc$scenario_id))
+        stop("Invalid manual gene hypotheses")
+    if (any(c("q_j", "p_m", "scenario_weight") %in% names(sc)))
+        stop("Gene-only mode must not invent probability weights")
+    if (any(!is.na(sc$variant) & nzchar(as.character(sc$variant))))
+        stop("Gene-only mode does not accept fabricated variant identifiers")
+    if (any(sc$mechanism != "unknown"))
+        stop("Mechanism-specific input requires a separate validated contract")
+    h <- unique(sc[, .(hypothesis_id, gene, variant)])
+    wide <- h[, .(hypothesis_id)]
+    expected_views <- character()
+} else {
+    if (is.null(a$model_views))
+        stop("Frozen-union mode requires model_views")
 mv <- read_gz(a$model_views)
 
 need_cols(sc, c(
@@ -67,6 +89,9 @@ data.table::setnames(
 )
 if (anyDuplicated(wide$hypothesis_id))
     stop("Model-view pivot produced duplicate hypothesis keys")
+
+
+}
 
 dr <- read_gz(b$drugs)
 need_cols(dr, c(
@@ -451,8 +476,10 @@ write_node_manifest(
         association_rows_and_original_columns_preserved = TRUE,
         score_threshold_applied = FALSE,
         new_consensus_probability_created = FALSE,
-        scalar_weight_scope =
-            "unchanged_input_scenario_weights_not_cross_model_consensus"
+        input_mode = input_mode,
+        scalar_weight_scope = if (identical(input_mode, "gene_only"))
+            "not_supplied_unweighted_gene_exploration"
+        else "unchanged_input_scenario_weights_not_cross_model_consensus"
     )
 )
 logmsg(

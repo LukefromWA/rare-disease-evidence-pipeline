@@ -125,7 +125,7 @@ rule c4_fresh_stan_union:
         OUT + "/{sample}/logs/c4_stan_union.log"
     shell:
         r"""
-        mkdir -p "$(dirname {log:q})"
+        mkdir -p "$(dirname {log:q})" {params.out:q}
         stage=$(mktemp -d {params.out:q}/.stage_XXXXXXXX)
         trap 'rm -rf "$stage"' EXIT
         Rscript --vanilla {input.code:q} \
@@ -190,7 +190,7 @@ rule review_a11_calculation:
         OUT + "/{sample}/logs/review_a11_calculation.log"
     shell:
         r"""
-        mkdir -p "$(dirname {log:q})"
+        mkdir -p "$(dirname {log:q})" {params.out:q}
         stage=$(mktemp -d {params.out:q}/.stage_XXXXXXXX)
         trap 'rm -rf "$stage"' EXIT
         Rscript --vanilla {input.code:q} \
