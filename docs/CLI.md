@@ -21,6 +21,51 @@ download all required resources, or replace review of the analysis settings.
 Gene-only exploration is not equivalent to case-based Track 2. The core
 workflow and `full_extended` also have different output scopes.
 
+## Analysis routes
+
+```mermaid
+flowchart TD
+    CLI["bin/mva"] --> CASE["Case-based analysis"]
+    CLI --> GENES["Gene-only exploration"]
+
+    CASE --> INPUT["Authorized inputs and reviewed profile"]
+    INPUT --> T1["Track 1: evidence, A10 ranking,<br/>frozen Stan scoring, and A11"]
+    FROZEN["Retained external models<br/>and preprocessing"] --> T1
+
+    T1 --> UNION["Current candidate / hypothesis handoff"]
+    HISTORY["Optional verified<br/>same-case historical support"] -.-> UNION
+
+    UNION --> T2["Track 2: mechanism scenarios,<br/>target / pathway discovery, and evidence"]
+    T2 --> GATES["Direction and safety gates"]
+    GATES --> CORE["Core D7 report<br/>including holds or no-eligible status"]
+
+    UNION --> ROUTE["Readthrough routing"]
+    ROUTE --> CONTEXT["Transcript context,<br/>genomic mapping, and verification bridge"]
+    CONTEXT --> RT["RTDetective lookup<br/>and prediction adoption"]
+    CONTEXT --> LEDGER["Source-linked claim ledgers<br/>and mechanistic augmentation"]
+    SOURCES["Saved curated-source bundles"] --> LEDGER
+
+    CORE --> AUDIT["Extended completion / integrity audit"]
+    RT --> AUDIT
+    LEDGER --> AUDIT
+
+    GENES --> DISCOVERY["Unweighted direct-target<br/>and shared-pathway discovery"]
+    DISCOVERY --> GREPORT["Gene exploration report<br/>no case probabilities or D0–D7 tiering"]
+```
+
+Track 1 can run independently. Connected mode continues through the current
+handoff into core Track 2; historical support is optional.
+
+The readthrough, prediction-adoption, and claim-ledger branch is requested
+through the explicit `full_extended` target described in the
+[extended workflow guide](full_extended.md), not implied by ordinary core CLI
+execution. These extended outputs do not feed scores back into core ranking.
+
+The diagram summarizes analysis routes, not every rule or resource dependency.
+External model fitting is separate from case execution. Completion of the
+extended audit is not clinical or biological validation.
+
+
 ## Interactive setup
 
 From the repository root:
