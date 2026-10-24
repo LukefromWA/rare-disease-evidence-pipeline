@@ -1,0 +1,5 @@
+# Merge this fragment into a complete run configuration.
+a1:
+  candidate_policy: legacy_any_csq_token_position_v1
+  chunk_records: 1000
+  progress_every: 100000
