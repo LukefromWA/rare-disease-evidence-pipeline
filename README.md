@@ -88,8 +88,6 @@ I have included model definitions, diagnostic records and individual fold plots.
 
 I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training, and I checked those settings throughout the project. I enabled equivalent training-use restrictions from the outset on my other AI accounts.
 
-I will identify any additional contributing providers, products and tiers in my final methods record. This describes the settings I verified; I am not claiming zero retention.
-
 See my [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
 <!-- BEGIN MODEL_DOWNLOADS -->
