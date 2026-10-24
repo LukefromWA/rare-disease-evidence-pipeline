@@ -26,10 +26,19 @@ To run the pipeline, see the [step-by-step run instructions](https://github.com/
 | Standalone ranking-sensitivity analysis | [A11 execution guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/A11_REPRODUCIBILITY.md) |
 | Software versions and citations | [Software record](docs/SOFTWARE.md) |
 | Original source-import checks and reproduction boundary | [Master workflow checkpoint](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/MASTER_WORKFLOW_CHECKPOINT.md) |
+## Execution status
 
-### Current execution status
+The configured Linux/WSL `full_extended` workflow completed a forced
+recomputation of all 62 scheduled jobs on 24 October 2026 in 27 minutes
+and 38 seconds, including the final completion and integrity audit.
 
-I completed the configured Linux/WSL workflow through Track 1, an explicitly prepared same-case historical candidate handoff, and Track 2. The run used existing VEP-annotated input, my private configuration, prepared local resources, and frozen external model artifacts. Output integrity and cross-stage consistency were checked, and all 15 CLI tests passed.
+The run covered core candidate analysis, frozen-model scoring, readthrough
+routing, transcript-context verification, genomic mapping, external-prediction
+lookups, and source-linked claim ledgers.
+
+Execution uses the documented runtime, prepared reference resources, retained
+model artifacts, and authorized inputs. Detailed run conditions, earlier CLI
+checks, and method-specific availability are recorded in the execution guides.
 
 | Stage | Completed steps | Observed elapsed time |
 |---|---:|---:|
