@@ -8,18 +8,11 @@ I keep case evidence, external model training, frozen inference, and downstream 
 
 The project has two connected parts. Track 1 prepares and ranks candidate hypotheses. Track 2 examines their mechanisms and the evidence for possible drug-repurposing hypotheses. I retain the genomic, phenotype, network, and model-based evidence rather than treating their scores as interchangeable.
 
-The current implementation is on the [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow). I use this page on `main` for the project overview and methods. The links below lead to the source, execution guides, and checks completed so far.
+The current implementation is on the [workflow branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow). I use this page on `main` for the project overview and methods.
 
-| Looking for | Start with |
-|---|---|
-| Analysis stages and entrypoints | [Workflow guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md) |
-| Master workflow | [workflow/Snakefile](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/Snakefile) |
-| Stage dependencies and commands | [Rule modules](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/rules) |
-| Calculations and shared functions | [Scripts](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/scripts) and [workflow library](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/lib) |
-| External training and retained-fit records | [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) |
-| Standalone ranking-sensitivity analysis | [A11 execution guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/A11_REPRODUCIBILITY.md) |
-| Software versions and citations | [Software record](docs/SOFTWARE.md) |
-| Completed checks and remaining setup | [Master workflow checkpoint](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/MASTER_WORKFLOW_CHECKPOINT.md) |
+To run the pipeline, start with the [step-by-step run instructions](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md#how-to-run). The [CLI guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/CLI.md) covers input requirements, configuration, command-line options, and historical handoff preparation.
+
+The links below lead to the source, execution guides, and checks completed so far.
 
 ### Current execution status
 
