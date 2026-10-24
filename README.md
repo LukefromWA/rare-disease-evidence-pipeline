@@ -121,7 +121,15 @@ The sections below explain the scientific methods and assumptions. The execution
 - [Environment records](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training/environment) describe the imported training environment.
 - [AI assistance disclosure](docs/AI_ASSISTANCE.md) explains how I used AI tools in the project.
 
-I have not yet verified a one-command reproduction from a fresh checkout of `main`. Unavailable methods and teaching examples stay labeled rather than being presented as completed production analyses.
+The integrated implementation is maintained on the `workflow` branch. The
+configured Linux/WSL workflow has completed a forced end-to-end execution
+through the core and extended stages, including the final completion and
+integrity audit.
+
+Execution requires the documented runtime, reference resources, retained model
+artifacts, and authorized case inputs. See the workflow and CLI guides for
+setup, supported analysis routes, and method-specific availability.
+
 
 ## Workflow overview
 
@@ -554,12 +562,6 @@ I developed this project as part of the Hackathon, using the provided data to in
 ## License and submission reuse
 
 My Hackathon submission is subject to CC BY 4.0, as required by the organizers. The organizers may rerun the submission and share it with the research community, with attribution to me. Third-party software and resources retain their own licenses. See [LICENSE](LICENSE) for the license notice and official terms.
-
-## AI assistance
-
-I used Perplexity Pro primarily for documentation, debugging and code/workflow integration. I configured the relevant privacy and data-usage settings from the beginning to prevent private data from being used for model training, and checked those settings throughout the project.
-
-See the [AI assistance disclosure](docs/AI_ASSISTANCE.md).
 
 ## Intended use
 
