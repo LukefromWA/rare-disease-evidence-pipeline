@@ -22,3 +22,15 @@
 !/environment/
 /environment/*
 !/environment/software_versions.observed.tsv
+
+# Reviewed candidate-scoped A1 source, tests, configuration and documentation.
+!/workflow/scripts/a0_prepare_candidates.sh
+!/docs/candidate-scoped-a1.md
+
+!/tests/
+/tests/*
+!/tests/test_candidate_subset.py
+
+!/config/
+/config/*
+!/config/a1.candidates.example.yaml
