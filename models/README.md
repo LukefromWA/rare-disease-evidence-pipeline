@@ -1,6 +1,6 @@
 # Bayesian candidate-ranking models
 
-[Project overview](../README.md) · [Workflow placeholder](../workflow/README.md) · [Library placeholder](../lib/README.md)
+[Project overview](../README.md) · [Workflow guide](../workflow/README.md) · [Workflow library](../workflow/lib/)
 
 I fitted four Stan specifications on an external public cohort and retained three cross-validation fold fits per specification, with four chains per fit. The models compare global versus partially pooled feature coefficients, with or without an added Gaussian-copula contribution. The hackathon child's genome is not the training data for these fits.
 
@@ -15,7 +15,7 @@ I fitted four Stan specifications on an external public cohort and retained thre
 
 Each page explains the inputs, score, likelihood, active priors, prediction behavior, interpretation and retained-fit qualifications. Equations describe the inspected Stan definitions, not a new model fitted by this documentation update. Display equations use fenced math blocks rather than bare LaTeX bracket delimiters, and avoid the unsupported operatorname macro.
 
-These pages are on `main`. The implementation, architecture figures and retained diagnostic material are currently linked from `external-training`; this documentation commit does not merge those files or create a runnable workflow or library. The workflow and library READMEs are explicit consolidation placeholders.
+These model descriptions are included on the `workflow` branch. The implementation, architecture figures and retained diagnostic material are currently linked from `external-training`; this documentation commit does not merge those files or create a runnable workflow or library. The workflow guide documents execution routes. Shared workflow source files live in `workflow/lib/`; the top-level `lib/` directory is a separate consolidation placeholder.
 
 ## Shared interpretation
 

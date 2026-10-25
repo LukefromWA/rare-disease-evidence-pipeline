@@ -1,10 +1,10 @@
 # Analysis workflow
 
-[Project overview](../README.md) · [How to run](../README.md#how-to-run) · [CLI guide](../docs/CLI.md)
+[Project overview](../README.md) · [How to run](#how-to-run) · [CLI guide](../docs/CLI.md)
 
 I use this workflow to carry case evidence through candidate ranking, frozen model scoring and mechanism-aware drug-repurposing research. The calculations stay in the existing scripts and libraries; `bin/mva` provides the command-line entrypoint.
 
-## Completed run
+## Earlier CLI validation: historical-handoff route
 
 The configured Linux/WSL route completed Track 1, an explicitly prepared same-case historical candidate handoff, and Track 2 using existing VEP output and prepared local resources. Output integrity and cross-stage consistency were checked, and all 15 CLI tests passed.
 
@@ -18,7 +18,7 @@ The workflow was repaired and resumed during validation. These are observed sing
 
 ## How to run
 
-The [main run instructions](../README.md#how-to-run) cover the demonstrated route. The [CLI guide](../docs/CLI.md) includes path handling, configuration boundaries and the exact historical-handoff commands.
+The instructions below cover the demonstrated historical-handoff route. See the [project execution status](../README.md#current-execution-status) for the separately recorded core and extended workflow execution. The [CLI guide](../docs/CLI.md) includes path handling, configuration boundaries and the exact historical-handoff commands.
 
 ### 1. Use the implementation branch and configured runtime
 
