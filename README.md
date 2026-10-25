@@ -9,12 +9,25 @@ The connected readthrough extension adds transcript-context verification, genomi
 
 ## Track 2 — Drug Repurposing Presentation
 
-**Lucas Anderson | LukefromWA | Rare Disease, Real Kid: MVA Hackathon 2026**
+<p align="center">
+  <strong>Lucas Anderson | LukefromWA | Rare Disease, Real Kid: MVA Hackathon 2026</strong>
+</p>
 
-[![Watch the Track 2 presentation](https://img.youtube.com/vi/o5of9Upa75k/hqdefault.jpg)](https://youtu.be/o5of9Upa75k)
+<p align="center">
+  <a href="https://youtu.be/o5of9Upa75k">
+    <img
+      src="https://img.youtube.com/vi/o5of9Upa75k/hqdefault.jpg"
+      alt="Watch the Track 2 presentation"
+      width="480"
+    />
+  </a>
+</p>
 
-*Click the image above to watch the three-minute Track 2 presentation.*
-
+<p align="center">
+  <a href="https://youtu.be/o5of9Upa75k">▶ Watch on YouTube</a>
+  <br />
+  <em>Click the image above to watch the three-minute Track 2 presentation.</em>
+</p>
 
 
 ## Start here ##
