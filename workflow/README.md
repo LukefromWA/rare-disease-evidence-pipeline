@@ -242,3 +242,5 @@ results are not distributed with the public source.
 
 This workflow supports computational research and human review.
 Candidate rankings, model predictions and drug-repurposing hypotheses
+guide further investigation; they are not clinical diagnoses or
+treatment recommendations.
