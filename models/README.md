@@ -15,7 +15,7 @@ I fitted four Stan specifications on an external public cohort and retained thre
 
 Each page explains the inputs, score, likelihood, active priors, prediction behavior, interpretation and retained-fit qualifications. Equations describe the inspected Stan definitions, not a new model fitted by this documentation update. Display equations use fenced math blocks rather than bare LaTeX bracket delimiters, and avoid the unsupported operatorname macro.
 
-These model descriptions are shared between `main` and `workflow`. The implementation, architecture figures and retained diagnostic material are currently linked from `external-training`; this documentation commit does not merge those files or create a runnable workflow or library. The workflow guide documents execution routes. Shared implementation files are maintained in `workflow/lib/` on the `workflow` branch; the top-level `lib/` directory is a separate consolidation placeholder.
+These model descriptions are shared between `main` and `workflow`. The integrated analysis source and execution guides are maintained on the `workflow` branch. External-training model definitions, architecture figures and retained-fit diagnostics are linked from `external-training`. Shared workflow functions are maintained in `workflow/lib/` on the `workflow` branch; the top-level `lib/` directory provides documentation and navigation.
 
 ## Shared interpretation
 
