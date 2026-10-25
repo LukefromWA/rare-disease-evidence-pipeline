@@ -1,13 +1,13 @@
-# A11 reproducible execution path
+# A11 ranking-sensitivity analysis
 
-This port preserves the original 18-specification Dirichlet/Beta sensitivity
+A11 implements the original 18-specification Dirichlet/Beta sensitivity
 calculation: three scenarios, two network views and three gamma values.
 Production defaults remain 10,000 draws per specification and seed 20260912.
 This is not a calibrated causal/pathogenicity probability model.
 Dependence is used for network-weight adjustment; the original Beta score
 perturbations are not newly replaced with joint copula sampling.
 
-## Ownership
+## Components
 - A: workflow/layer_a/scripts/a11_dependence_sensitivity.R
 - C: workflow/layer_c/scripts/attach_a11_multimodel.R
 - F: workflow/layer_f/scripts/f_a11_coverage_report.R
@@ -15,8 +15,7 @@ perturbations are not newly replaced with joint copula sampling.
 - Standalone runner: workflow/layer_a/Snakefile
 
 The standalone runner starts from an existing candidate-evidence CSV.
-It does not implement the missing upstream A10-to-evidence builder or the
-full A0-F master. An existing validated union is needed for attachment.
+It runs calculation and reporting from that evidence table rather than the full case workflow. Union attachment requires an existing compatible union. For integrated case execution, use the master workflow described in the [CLI guide](CLI.md).
 
 ## Input
 Calculation requires candidate_id, gene_symbol, genomic, hpo, string,
@@ -52,7 +51,7 @@ complete candidate registry or a downstream exclusion rule.
 Each producer/report run writes run_provenance.json with source/helper/input
 hashes, settings, package versions, R version, RNG kind, locale and output
 hashes. Producer runs also save initial/final RNG states and an eligibility
-ledger. The new report/attachment verify hashes against producer provenance.
+ledger. The report and attachment stages verify hashes against producer provenance.
 Existing legacy artifacts require honest provenance reconstruction or a
 separate legacy path; do not fabricate provenance for them.
 
@@ -63,11 +62,11 @@ other rules. Runtime outputs can be patient-derived and must remain outside
 public source exports. No populated config or real case result is committed.
 
 ## Validation and limitations
-See [historical A11 rewire test results](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/A11_REWIRE_TEST_RESULTS.md) for tests actually run by the patcher.
+See [historical A11 rewire test results](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/A11_REWIRE_TEST_RESULTS.md) for the recorded synthetic execution checks.
 Synthetic regression tests compare original and ported calculations/reports
 within one installed environment; they do not validate biology or prove
 cross-platform bitwise equality. Timestamps are not repeatability criteria.
-A repository-wide locked environment and the full master DAG remain pending.
+These standalone regression checks are distinct from the configured master-workflow execution described in [Validation and reproducibility](VALIDATION.md).
 
 ## Original source hashes
 - Bayesian_Dependence_Aware_Variant_Ranking_final.r: `d7d4c54db0073a59af0d3d70f585054e373ad0bb7b1a48d96e72f21cb4b166d8`
@@ -75,7 +74,7 @@ A repository-wide locked environment and the full master DAG remain pending.
 - attach_a11_multimodel_v1_1.R: `33070452d8bee77c741650422b4f547cc0e540e49cdd8996fb7a475938185102`
 
 
-## Reporting/CLI review correction
+## Reporting conventions
 Coverage labels explicitly distinguish genomic+HPO, genomic+network,
 HPO+network and three-view cases with a partial network representation.
 Network views still count as one conceptual evidence view. Original score
@@ -89,7 +88,7 @@ Empty CLI arguments now produce the required-input diagnostic before any
 attempt to construct argument index sequences.
 
 
-## Public-source packaging
+## Regression records
 Internal synthetic test scripts are retained locally, not distributed
 in this source tree. See VALIDATION.md for the public validation scope.
 The implementation and its execution/configuration interfaces remain

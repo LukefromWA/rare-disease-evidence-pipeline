@@ -1,12 +1,12 @@
-stage_id	repository_path	function_or_block	status	test_reference
-A1/A2	workflow/layer_a/R/01_helpers_qc.R	apply_core_qc	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
-A identifiers	workflow/layer_a/R/01_helpers_qc.R	make_candidate_id;normalize_candidate_id;missing_value	SOURCE_REVIEWED_NOT_TESTED_BY_THIS_SUITE	pending
-A7	workflow/layer_a/R/01_helpers_qc.R	weighted_available_mean	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
-A7	workflow/layer_a/R/04_integration.R	integrate_tier1	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
-A7c	workflow/layer_a/R/04_integration.R	shapley_attribution	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
-A7b/A8	workflow/layer_a/R/04_integration.R	estimate_dependence;run_tier9	SOURCE_REVIEWED_NOT_TESTED_BY_THIS_SUITE	pending
-A parameters	config/layer_a.parameters.yaml	allowlisted numeric settings	PARAMETER_RECORD_NOT_FULL_CONFIG	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_IMPORT_STATUS.md
-B m2a	workflow/stan/m2a.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test
-B m2b	workflow/stan/m2b.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test
-B m3a	workflow/stan/m3a.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test
-B m3b	workflow/stan/m3b.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test
+record_scope	stage_id	repository_path	function_or_block	status	test_reference
+historical_source_import_review	A1/A2	workflow/layer_a/R/01_helpers_qc.R	apply_core_qc	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
+historical_source_import_review	A identifiers	workflow/layer_a/R/01_helpers_qc.R	make_candidate_id;normalize_candidate_id;missing_value	SOURCE_REVIEWED_NOT_TESTED_BY_THIS_SUITE	pending
+historical_source_import_review	A7	workflow/layer_a/R/01_helpers_qc.R	weighted_available_mean	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
+historical_source_import_review	A7	workflow/layer_a/R/04_integration.R	integrate_tier1	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
+historical_source_import_review	A7c	workflow/layer_a/R/04_integration.R	shapley_attribution	SYNTHETIC_CORE_PASS	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_TEST_RESULTS.md
+historical_source_import_review	A7b/A8	workflow/layer_a/R/04_integration.R	estimate_dependence;run_tier9	SOURCE_REVIEWED_NOT_TESTED_BY_THIS_SUITE	pending
+historical_source_import_review	A parameters	config/layer_a.parameters.yaml	allowlisted numeric settings	PARAMETER_RECORD_NOT_FULL_CONFIG	https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/LOCAL_IMPORT_STATUS.md
+historical_source_import_review	B m2a	workflow/stan/m2a.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test
+historical_source_import_review	B m2b	workflow/stan/m2b.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test
+historical_source_import_review	B m3a	workflow/stan/m3a.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test
+historical_source_import_review	B m3b	workflow/stan/m3b.stan	model and generated quantities	MATCHES_REVIEWED_SOURCE_COMMIT	no new compilation or sampling test

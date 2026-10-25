@@ -35,7 +35,7 @@ These papers report findings in their studied systems, not established clinical 
 11. Kerem E, Konstan MW, De Boeck K, et al. Ataluren for the treatment of nonsense-mutation cystic fibrosis: a randomised, double-blind, placebo-controlled phase 3 trial. *The Lancet Respiratory Medicine*. 2014;2(7):539–547. DOI: [10.1016/S2213-2600(14)70100-6](https://doi.org/10.1016/S2213-2600(14)70100-6). PMID: 24836205.
 12. Konstan MW, VanDevanter DR, Rowe SM, et al. Efficacy and safety of ataluren in patients with nonsense-mutation cystic fibrosis not receiving chronic inhaled aminoglycosides: The international, randomized, double-blind, placebo-controlled Ataluren Confirmatory Trial in Cystic Fibrosis (ACT CF). *Journal of Cystic Fibrosis*. 2020;19(4):595–601. DOI: [10.1016/j.jcf.2020.01.007](https://doi.org/10.1016/j.jcf.2020.01.007). PMID: 31983658.
 
-The 15 claims in the supplied augmented ledger come from six publication IDs; they are not 15 independent studies. Source-anchor matching is not completed scientific adjudication. Preserve unfavorable findings and analysis hierarchy. Study 041's favorable ITT analyses do not replace its nonsignificant primary mITT result. Cell findings and a small uncontrolled SDS series do not establish benefit in another disorder.
+Multiple claims may derive from the same publication and must not be counted as independent studies. Source-anchor matching establishes traceability, not completed scientific adjudication. Preserve unfavorable findings and analysis hierarchy. Study 041's favorable ITT analyses do not replace its nonsignificant primary mITT result. Cell findings and a small uncontrolled SDS series do not establish benefit in another disorder.
 
 ## Regulatory sources (checked 23 October 2026)
 

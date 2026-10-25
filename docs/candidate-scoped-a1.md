@@ -1,7 +1,7 @@
 # Candidate-scoped streaming A1
 
 A0 -> a0_candidate_subset -> a1_streaming_selftest -> a1_evidence_matrix -> A2.
-A3 remains unchanged in this change set. No VEP rerun is introduced.
+This stage preserves A3 behavior and reuses existing VEP annotations.
 
 ## Policy
 
@@ -63,5 +63,4 @@ paths, sample identifiers, case counts or saved reference VCFs are repository
 fixtures or required production dependencies. New source locations generate
 new manifests and parity hashes. Use the pinned R environment for reproduction.
 
-The current A3 empty-HGVS overwrite behavior is intentionally deferred to a
-separate reviewed change. No A3 semantic changes are bundled here.
+Candidate-scoped selection does not alter downstream A3 semantics.
