@@ -22,4 +22,13 @@ I fitted this alternative specification; I did not package it as the M3b deploym
 
 ## Reproduction status
 
-I have included the Stan definition and diagnostic outputs. I am still integrating the tested training/scoring entrypoints and their shared dependencies into this checkout.
+The source snapshot includes Stan model definitions, retained-fit
+diagnostic records and fold-level plots. Retained RDS model objects are
+distributed separately as release attachments, alongside an asset
+inventory and SHA-256 checksums.
+
+The integrated workflow has been run locally. This tagged snapshot is
+a source-and-documentation snapshot, not a complete reproduction of
+that local environment. Reproduction requires the matching workflow
+source, dependencies, configuration and authorized inputs. Private
+case inputs and predictions are not included.

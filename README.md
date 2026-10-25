@@ -27,7 +27,16 @@ I distinguish OOF evaluation from new-case scoring. An OOF case is evaluated wit
 
 ## Reproduction status
 
-I have included model definitions, diagnostic records and individual fold plots. I am still integrating and verifying the training/scoring entrypoints and their shared dependencies, so this checkout is not yet a complete end-to-end runner. I keep raw training objects and private-case predictions out of this source-and-documentation import.
+The source snapshot includes Stan model definitions, retained-fit
+diagnostic records and fold-level plots. Retained RDS model objects are
+distributed separately as release attachments, alongside an asset
+inventory and SHA-256 checksums.
+
+The integrated workflow has been run locally. This tagged snapshot is
+a source-and-documentation snapshot, not a complete reproduction of
+that local environment. Reproduction requires the matching workflow
+source, dependencies, configuration and authorized inputs. Private
+case inputs and predictions are not included.
 
 ## AI assistance
 
