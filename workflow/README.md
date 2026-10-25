@@ -1,6 +1,8 @@
 # Analysis workflow
 
-[Project overview](../README.md) · [How to run](#how-to-run) · [CLI guide](../docs/CLI.md)
+> This guide is shared between `main` and `workflow`. Run the commands from a checkout of the `workflow` branch; publishing this guide on `main` does not place the implementation there.
+
+[Project overview](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/README.md) · [How to run](#how-to-run) · [CLI guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/CLI.md)
 
 I use this workflow to carry case evidence through candidate ranking, frozen model scoring and mechanism-aware drug-repurposing research. The calculations stay in the existing scripts and libraries; `bin/mva` provides the command-line entrypoint.
 
@@ -18,7 +20,7 @@ The workflow was repaired and resumed during validation. These are observed sing
 
 ## How to run
 
-The instructions below cover the demonstrated historical-handoff route. See the [project execution status](../README.md#current-execution-status) for the separately recorded core and extended workflow execution. The [CLI guide](../docs/CLI.md) includes path handling, configuration boundaries and the exact historical-handoff commands.
+The instructions below cover the demonstrated historical-handoff route. See the [project execution status](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/README.md#current-execution-status) for the separately recorded core and extended workflow execution. The [CLI guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/CLI.md) includes path handling, configuration boundaries and the exact historical-handoff commands.
 
 ### 1. Use the implementation branch and configured runtime
 
@@ -59,7 +61,7 @@ For a saved configuration, preview and then execute:
 
 ### 3. Prepare the historical handoff
 
-Follow [Existing-case historical handoff preparation](../docs/CLI.md#existing-case-historical-handoff-preparation). Verify the historical manifest, GRCh38 declarations, input checksums and same-case identity. Keep the completed Track 1 configuration unchanged, prepare a separate `track2_handoff.yaml`, and build a new union from the completed current-run artifacts using the documented restricted `layer_c` commands.
+Follow [Existing-case historical handoff preparation](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/CLI.md#existing-case-historical-handoff-preparation). Verify the historical manifest, GRCh38 declarations, input checksums and same-case identity. Keep the completed Track 1 configuration unchanged, prepare a separate `track2_handoff.yaml`, and build a new union from the completed current-run artifacts using the documented restricted `layer_c` commands.
 
 Track 1 alone does not prepare this historical union. The existing-run Track 2 wizard does not build it automatically. Do not substitute an older run's scored union for the new build. The current connected case adapter requires historical support.
 

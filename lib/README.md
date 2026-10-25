@@ -1,8 +1,9 @@
 # Shared library — consolidation placeholder
 
-> Directory distinction: this top-level `lib/` directory is a consolidation placeholder. The existing workflow library source files are in [`workflow/lib/`](../workflow/lib/). This checklist describes work proposed for this directory; it is not an inventory or validation statement for the existing workflow library.
+> Directory distinction: this top-level `lib/` directory is a consolidation placeholder. Existing shared workflow source files are maintained in [`workflow/lib/` on the `workflow` branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/workflow/workflow/lib). The checklist below concerns this placeholder directory, not the implementation or validation status of the existing workflow library.
 
-[Project overview](../README.md) · [Workflow](../workflow/README.md) · [Model specifications](../models/README.md)
+
+[Project overview](../README.md) · [Workflow](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/workflow/README.md) · [Model specifications](../models/README.md)
 
 This directory is reserved for the reviewed reusable functions that support the workflow. This README is a documentation placeholder; no library functions or package are created by this commit.
 

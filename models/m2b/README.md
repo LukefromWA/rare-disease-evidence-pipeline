@@ -78,6 +78,6 @@ I report retained-parameter diagnostics and recorded divergence counts separatel
 
 ## Implementation and artifacts
 
-This model description is included on the `workflow` branch; its linked Stan implementation and diagnostic figures are maintained on `external-training`. Training/scoring entrypoints and shared dependencies remain under integration. This documentation does not create or validate a full runner.
+The integrated workflow implementation is maintained on the `workflow` branch. The linked Stan definitions and retained diagnostic figures are maintained on `external-training`. Training/scoring entrypoints and shared dependencies remain under integration. This documentation does not create or validate a full runner.
 
 [Retained-fold release](https://github.com/LukefromWA/rare-disease-evidence-pipeline/releases/tag/retained-folds-v1): availability depends on publication and repository access. The fold pages record artifact identities and fingerprints. No retained model file is changed here.
