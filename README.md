@@ -25,7 +25,7 @@ To run the pipeline, start with the [step-by-step run instructions](https://gith
 | External training and retained-fit records | [external-training branch](https://github.com/LukefromWA/rare-disease-evidence-pipeline/tree/external-training) |
 | Standalone ranking-sensitivity analysis | [A11 execution guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/A11_REPRODUCIBILITY.md) |
 | Software versions and citations | [Software record](docs/SOFTWARE.md) |
-| Source-import checks and reproduction boundary | [Master workflow checkpoint](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/MASTER_WORKFLOW_CHECKPOINT.md) |
+| Source-import checks and reproduction boundary | [Master workflow checkpoint](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/MASTER_WORKFLOW_CHECKPOINT.md) |
 | Readthrough routing, sequence-context verification, genomic mapping, RTDetective lookup, and source-linked claim ledgers | [Extended workflow guide](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/workflow/docs/full_extended.md) |
 
 ## Current execution status

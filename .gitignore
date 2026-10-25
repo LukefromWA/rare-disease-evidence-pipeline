@@ -73,3 +73,22 @@
 !/workflow/scripts/test_full_extended_audit.py
 !/docs/full_extended.md
 !/config/full_extended.example.yaml
+
+# Historical documentation retained locally; do not re-add.
+/docs/A11_REPORTING_REVIEW_FILES.sha256
+/docs/A11_REPORTING_REVIEW_TEST_RESULTS.md
+/docs/A11_REWIRE_FILES.sha256
+/docs/A11_REWIRE_TEST_RESULTS.md
+/docs/A11_SYNTHETIC_DAG_FILES.sha256
+/docs/A11_SYNTHETIC_DAG_RESULTS.md
+/docs/ABC_SOURCE_CHECKPOINT.md
+/docs/ABC_SOURCE_CHECKPOINT.sha256
+/docs/BC_NODE_COMPLETION.md
+/docs/BC_NODE_COMPLETION.sha256
+/docs/LAYER_A_NODE_CHECKPOINT.md
+/docs/LAYER_A_NODE_CHECKPOINT.sha256
+/docs/LOCAL_IMPORT_STATUS.md
+/docs/LOCAL_TEST_RESULTS.md
+/docs/MASTER_WORKFLOW_CHECKPOINT.md
+/docs/RELEASE_FILES.sha256
+/docs/review/A11_FIRST_PASS.tsv

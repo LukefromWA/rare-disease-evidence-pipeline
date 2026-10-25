@@ -63,7 +63,7 @@ other rules. Runtime outputs can be patient-derived and must remain outside
 public source exports. No populated config or real case result is committed.
 
 ## Validation and limitations
-See A11_REWIRE_TEST_RESULTS.md for tests actually run by the patcher.
+See [historical A11 rewire test results](https://github.com/LukefromWA/rare-disease-evidence-pipeline/blob/1995d267be195f2ac3ce089bb85507f2dbb6e37d/docs/A11_REWIRE_TEST_RESULTS.md) for tests actually run by the patcher.
 Synthetic regression tests compare original and ported calculations/reports
 within one installed environment; they do not validate biology or prove
 cross-platform bitwise equality. Timestamps are not repeatability criteria.
